@@ -117,7 +117,7 @@ class VRActivity : Activity(), Player.EventListener {
         player = SimpleExoPlayer.Builder(this).build()
 
         val uri = Uri.parse(videoUrl)
-        val mediaSource = buildMediaSource(streamUrl, buildDataSourceFactory(this, ""))
+        val mediaSource = buildMediaSource(videoUrl, buildDataSourceFactory(this, ""))
 
         mediaSource?.let {
             player?.prepare(it)

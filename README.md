@@ -19,7 +19,7 @@ Add pubspec.yaml dependencies.
 
 ``` dart
 dependencies:
-  video_360: ^0.0.1
+  video_360: ^0.0.2
 ```
 
 Add AndroidManifest.xml
@@ -45,7 +45,7 @@ play video:
 Video360.playVideo("360_VIDEO_URL_HERE");
 ```
 
-samepl code:
+sample code:
 ``` dart
 import 'package:flutter/material.dart';
 
