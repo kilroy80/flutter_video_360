@@ -1,7 +1,7 @@
 name: video_360
 description: simple video 360 player
 version: 0.0.1
-homepage:
+homepage: https://github.com/kilroy80/flutter_video_360
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
