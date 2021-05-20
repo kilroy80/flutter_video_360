@@ -12,7 +12,7 @@ class VRViewController: UIViewController {
 
         view.backgroundColor = UIColor.black
 
-        let videoURL = URL(string: "https://bitmovin-a.akamaihd.net/content/playhouse-vr/m3u8s/105560.m3u8")!
+        guard let videoURL = URL(string: "https://bitmovin-a.akamaihd.net/content/playhouse-vr/m3u8s/105560.m3u8") else { return }
         player = AVPlayer(url: videoURL)
 
         let motionManager = Swifty360MotionManager.shared
@@ -24,8 +24,36 @@ class VRViewController: UIViewController {
         view.addSubview(swifty360View)
 
         // delay 5 second
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-            self.player.play()
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+//            self.player.play()
+//        }
+        
+        player.play()
+        
+        let interval = CMTime(seconds: 0.5, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { (time) in
+            if let currentItem = self.player.currentItem {
+                if currentItem.status == AVPlayerItem.Status.readyToPlay {
+                        if currentItem.isPlaybackLikelyToKeepUp {
+                            if (self.player.rate == 0) {
+                                print("Playing")
+                                self.player.play()
+                            }
+                        } else if currentItem.isPlaybackBufferEmpty {
+                            print("Buffer empty - show loader")
+                        }  else if currentItem.isPlaybackBufferFull {
+                            print("Buffer full - hide loader")
+                        } else {
+                            print("Buffering")
+                        }
+                } else if currentItem.status == AVPlayerItem.Status.failed {
+                        print("Failed")
+                } else if currentItem.status == AVPlayerItem.Status.unknown {
+                        print("Unknown")
+                    }
+                } else {
+                    print("avPlayer.currentItem is nil")
+                }
         }
 
 //        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(reorientVerticalCameraAngle))
@@ -36,4 +64,10 @@ class VRViewController: UIViewController {
 //        swifty360ViewController.reorientVerticalCameraAngleToHorizon(animated: true)
 //    }
 
+}
+
+extension AVPlayer {
+    var isPlaying: Bool {
+        return rate != 0 && error == nil
+    }
 }
