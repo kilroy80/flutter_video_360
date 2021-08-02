@@ -12,7 +12,7 @@ class VRViewController: UIViewController {
 
         view.backgroundColor = UIColor.black
 
-        guard let videoURL = URL(string: "https://bitmovin-a.akamaihd.net/content/playhouse-vr/m3u8s/105560.m3u8") else { return }
+        guard let videoURL = URL(string: "http://www.solusvision.co.kr/arportal/gosam_lake/gosam_lake1/HLS/gosam_lake1.m3u8") else { return }
         player = AVPlayer(url: videoURL)
 
         let motionManager = Swifty360MotionManager.shared
@@ -27,18 +27,25 @@ class VRViewController: UIViewController {
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
 //            self.player.play()
 //        }
-        
+
         player.play()
-        
+
         let interval = CMTime(seconds: 0.5, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { (time) in
             if let currentItem = self.player.currentItem {
                 if currentItem.status == AVPlayerItem.Status.readyToPlay {
                         if currentItem.isPlaybackLikelyToKeepUp {
-                            if (self.player.rate == 0) {
+                            if (!self.player.isPlaying) {
                                 print("Playing")
                                 self.player.play()
                             }
+                            
+//                            if (Float(CMTimeGetSeconds((self.player.currentItem?.currentTime())!)) >= Float(CMTimeGetSeconds(self.player.currentItem!.duration))) {
+//                                print("RePlaying")
+//                                self.player.seek(to: CMTime.zero)
+//                                self.player.pause()
+//                                self.player.play()
+//                            }
                         } else if currentItem.isPlaybackBufferEmpty {
                             print("Buffer empty - show loader")
                         }  else if currentItem.isPlaybackBufferFull {
