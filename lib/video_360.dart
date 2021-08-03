@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/services.dart';
 
@@ -8,8 +9,13 @@ class Video360 {
       const MethodChannel('kino_video_360');
 
   static Future<void> playVideo(String url) async {
-    return _channel.invokeMethod("openPlayer", <String, dynamic>{
-      'url': url,
-    });
+
+    if (Platform.isAndroid) {
+      return _channel.invokeMethod("openPlayer", <String, dynamic>{
+        'url': url,
+      });
+    } else {
+
+    }
   }
 }
