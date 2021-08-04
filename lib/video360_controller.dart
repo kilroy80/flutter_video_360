@@ -45,11 +45,56 @@ class Video360Controller {
     }
   }
 
+  stop() async {
+    try {
+      await _channel.invokeMethod<void>('stop');
+    } on PlatformException catch (e) {
+      print('${e.code}: ${e.message}');
+    }
+  }
+
+  reset() async {
+    try {
+      await _channel.invokeMethod<void>('reset');
+    } on PlatformException catch (e) {
+      print('${e.code}: ${e.message}');
+    }
+  }
+
+  searchTime(double time) async {
+    try {
+      await _channel.invokeMethod<void>('searchTime', {
+        'searchTime': time
+      });
+    } on PlatformException catch (e) {
+      print('${e.code}: ${e.message}');
+    }
+  }
+
+  moveTime(double time) async {
+    try {
+      await _channel.invokeMethod<void>('moveTime', {
+        'moveTime': time
+      });
+    } on PlatformException catch (e) {
+      print('${e.code}: ${e.message}');
+    }
+  }
+
+
+
   // flutter -> android / ios callback handle
   Future<dynamic> _handleMethodCalls(MethodCall call) async {
     switch (call.method) {
       case 'play':
         break;
+
+      case 'test':
+        var duration = call.arguments['duration'];
+        var total = call.arguments['total'];
+        print('$duration / $total');
+        break;
+
       default:
         print('Unknowm method ${call.method} ');
         break;

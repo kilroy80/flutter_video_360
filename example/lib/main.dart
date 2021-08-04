@@ -27,6 +27,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -55,12 +56,71 @@ class _MyAppState extends State<MyApp> {
             ),
             Column(
               children: [
-                MaterialButton(
-                  onPressed: () {
-                    controller.play();
-                  },
-                  color: Colors.grey[100],
-                  child: Text('Play Video'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    MaterialButton(
+                      onPressed: () {
+                        controller.play();
+                      },
+                      color: Colors.grey[100],
+                      child: Text('Play'),
+                    ),
+                    MaterialButton(
+                      onPressed: () {
+                        controller.stop();
+                      },
+                      color: Colors.grey[100],
+                      child: Text('Stop'),
+                    ),
+                    MaterialButton(
+                      onPressed: () {
+                        controller.reset();
+                      },
+                      color: Colors.grey[100],
+                      child: Text('Reset'),
+                    ),
+                    MaterialButton(
+                      onPressed: () {
+                        controller.searchTime(80);
+                      },
+                      color: Colors.grey[100],
+                      child: Text('1:20'),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    MaterialButton(
+                      onPressed: () {
+                        controller.moveTime(-20);
+                      },
+                      color: Colors.grey[100],
+                      child: Text('<<'),
+                    ),
+                    MaterialButton(
+                      onPressed: () {
+                        controller.moveTime(20);
+                      },
+                      color: Colors.grey[100],
+                      child: Text('>>'),
+                    ),
+                    Flexible(
+                      child: Center(
+                        child: Text("00:00"
+                        ),
+                      ),
+                    ),
+                    // Flexible(child: child),
+                    MaterialButton(
+                      onPressed: () {
+                        controller.searchTime(80);
+                      },
+                      color: Colors.grey[100],
+                      child: Text('--'),
+                    ),
+                  ],
                 )
               ],
             )
