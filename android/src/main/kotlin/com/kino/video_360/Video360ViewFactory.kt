@@ -1,4 +1,4 @@
-package com.seerslab.argear.argear_flutter_plugin
+package com.kino.video_360
 
 import android.app.Activity
 import android.content.Context

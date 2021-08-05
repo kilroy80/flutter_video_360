@@ -1,12 +1,16 @@
-package com.seerslab.argear.argear_flutter_plugin
+package com.kino.video_360
 
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import com.kino.video_360.Video360UIView
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -20,11 +24,16 @@ class Video360View(private val activity: Activity, context: Context, messenger: 
     private val methodChannel: MethodChannel = MethodChannel(messenger, "kino_video_360_$id")
     lateinit var activityLifecycleCallbacks: Application.ActivityLifecycleCallbacks
 
-    private var arGearSessionView: ARGearSessionView? = null
+    private var videoView: Video360UIView
 
     init {
         methodChannel.setMethodCallHandler(this)
-        arGearSessionView = ARGearSessionView(context)
+        videoView = Video360UIView(context)
+
+        val layout = ViewGroup.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
+        )
+        videoView.layoutParams = layout
 
         setupLifeCycle(context)
     }
@@ -32,6 +41,10 @@ class Video360View(private val activity: Activity, context: Context, messenger: 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "init" -> {
+                val url: String? = call.argument("url")
+                url?.let {
+                    videoView.initializePlayer(url)
+                }
             }
             "resume" -> {
                 Log.i(TAG, "resume")
@@ -44,6 +57,21 @@ class Video360View(private val activity: Activity, context: Context, messenger: 
             "dispose" -> {
                 Log.i(TAG, "dispose")
                 dispose()
+            }
+            "play" -> {
+                videoView.play()
+            }
+            "stop" -> {
+                videoView.stop()
+            }
+            "reset" -> {
+                videoView.reset()
+            }
+            "moveTime" -> {
+                val seekTime: Double? = call.argument("moveTime")
+                seekTime?.let {
+                    videoView.seek(it)
+                }
             }
             "exitApp" -> {
                 android.os.Process.killProcess(android.os.Process.myPid())
@@ -61,6 +89,7 @@ class Video360View(private val activity: Activity, context: Context, messenger: 
 
             override fun onActivityStarted(activity: Activity) {
                 Log.i(TAG, "onActivityStarted")
+                onStart()
             }
 
             override fun onActivityResumed(activity: Activity) {
@@ -75,6 +104,7 @@ class Video360View(private val activity: Activity, context: Context, messenger: 
 
             override fun onActivityStopped(activity: Activity) {
                 Log.i(TAG, "onActivityStopped")
+                onStop()
             }
 
             override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
@@ -87,5 +117,32 @@ class Video360View(private val activity: Activity, context: Context, messenger: 
         }
 
         activity.application.registerActivityLifecycleCallbacks(this.activityLifecycleCallbacks)
+    }
+
+    private fun onStart() {
+        videoView.onStart()
+    }
+
+    private fun onResume() {
+        videoView.onResume()
+    }
+
+    private fun onStop() {
+        videoView.onStop()
+    }
+
+    private fun onPause() {
+        videoView.onPause()
+    }
+
+    private fun onDestroy() {
+        videoView.onDestroy()
+    }
+
+    override fun getView(): View {
+        return videoView
+    }
+
+    override fun dispose() {
     }
 }
