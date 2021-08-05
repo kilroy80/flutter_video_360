@@ -81,6 +81,16 @@ class Video360Controller {
     }
   }
 
+  gesture(double x, double y) async {
+    try {
+      await _channel.invokeMethod<void>('gesture', {
+        'x': x,
+        'y': y
+      });
+    } on PlatformException catch (e) {
+      print('${e.code}: ${e.message}');
+    }
+  }
 
 
   // flutter -> android / ios callback handle
@@ -92,7 +102,7 @@ class Video360Controller {
       case 'test':
         var duration = call.arguments['duration'];
         var total = call.arguments['total'];
-        print('$duration / $total');
+        // print('$duration / $total');
         break;
 
       default:

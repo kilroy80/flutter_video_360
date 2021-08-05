@@ -69,6 +69,17 @@ public class Video360View: UIView, FlutterPlugin {
             }
             self.moveTime(time: time)
             
+        case "gesture":
+            guard let argMaps = call.arguments as? Dictionary<String, Any>,
+                  let x = argMaps["x"] as? Double, x > 0,
+                  let y = argMaps["y"] as? Double, y > 0 else {
+                result(FlutterError(code: call.method, message: "Missing argument", details: nil))
+                return
+            }
+            let point = CGPoint(x: x, y: y)
+            print("----------------- \(point) -----------------")
+            self.swifty360View.cameraController.handlePan(point: point)
+            
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -125,14 +136,15 @@ extension Video360View {
     
     // 현재 시간 기준 앞뒤 이동
     private func moveTime(time: Double) {
-        let current = swifty360View.player.currentTime()
+        let current = self.swifty360View.player.currentTime()
         let sec = CMTimeMakeWithSeconds(Float64(time), preferredTimescale: Int32(NSEC_PER_SEC))
         self.swifty360View.player.seek(to: current + sec)
+        self.checkPlayerState()
     }
     
     // 재생 시간 업데이트
     private func updateTime() {
-        let interval = CMTime(seconds: 0.5, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        let interval = CMTime(seconds: 1, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         self.player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
             guard let self = self else { return }
             
@@ -141,7 +153,12 @@ extension Video360View {
             let durationMinutes = duration / 60
             let durationString = String(format: "%02d:%02d", durationMinutes, durationSeconds)
             
-            let total = Int(CMTimeGetSeconds(self.swifty360View.player.currentItem?.duration ?? CMTimeMake(value: 0, timescale: 1)))
+            let itemDuration = self.player.currentItem?.duration
+            let second = CMTimeGetSeconds(itemDuration ?? CMTimeMake(value: 0, timescale: 1))
+            if second.isNaN {
+                return
+            }
+            let total = Int(second)
             let totalSeconds = total % 60
             let totalMinutes = total / 60
             let totalString = String(format: "%02d:%02d", totalMinutes, totalSeconds)
