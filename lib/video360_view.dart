@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:video_360/video360_android_view.dart';
 import 'package:video_360/video360_controller.dart';
 import 'package:video_360/video360_ios_view.dart';
 
@@ -35,12 +36,12 @@ class _Video360ViewState extends State<Video360View> with WidgetsBindingObserver
   @override
   Widget build(BuildContext context) {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      // return Container(
-      //   child: Video360AndroidView(
-      //     viewType: 'kino_video_360',
-      //     onPlatformViewCreated: _onPlatformViewCreated,
-      //   ),
-      // );
+      return Container(
+        child: Video360AndroidView(
+          viewType: 'kino_video_360',
+          onPlatformViewCreated: _onPlatformViewCreated,
+        ),
+      );
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       return Container(
         child: Video360IOSView(
