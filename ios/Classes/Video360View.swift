@@ -5,14 +5,11 @@ import AVKit
 public class Video360View: UIView, FlutterPlugin {
     
     public static func register(with registrar: FlutterPluginRegistrar) {}
+    var channel: FlutterMethodChannel!
     
     private var timer: Timer?
-    
-    var player: AVPlayer!
-    var channel: FlutterMethodChannel!
-    var swifty360View: Swifty360View!
-    
-    
+    private var player: AVPlayer!
+    private var swifty360View: Swifty360View!
     
     public func initFlutter(
         viewIdentifier viewId: Int64,
@@ -30,21 +27,22 @@ public class Video360View: UIView, FlutterPlugin {
         registrar.addApplicationDelegate(self)
     }
     
-    
-    private var posX: Double = 0.0
-    private var posY: Double = 0.0
-    
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
         case "init":
             guard let argMaps = call.arguments as? Dictionary<String, Any>,
+                  let isAutoPlay = argMaps["isAutoPlay"] as? Bool,
                   let width = argMaps["width"] as? Double,
                   let height = argMaps["height"] as? Double else {
                 result(FlutterError(code: call.method, message: "Missing argument", details: nil))
                 return
             }
             self.initView(width: width, height: height)
-            self.checkPlayerState()
+
+            if isAutoPlay {
+                self.checkPlayerState()
+            }
+            
             self.updateTime()
             
         case "play":
@@ -71,7 +69,7 @@ public class Video360View: UIView, FlutterPlugin {
                 return
             }
             self.moveTime(time: time)
-
+            
         case "onPanUpdate":
             guard let argMaps = call.arguments as? Dictionary<String, Any>,
                   let isStart = argMaps["isStart"] as? Bool,
