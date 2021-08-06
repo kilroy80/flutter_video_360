@@ -47,8 +47,11 @@ class _MyAppState extends State<MyApp> {
                     url: 'https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8',
                   ),
                 ),
+                onPanStart: (details) {
+                  controller.onPanUpdate(true, details.localPosition.dx, details.localPosition.dy);
+                },
                 onPanUpdate: (details) {
-                  controller.gesture(details.localPosition.dx, details.localPosition.dy);
+                  controller.onPanUpdate(false, details.localPosition.dx, details.localPosition.dy);
                 },
               ),
             ),

@@ -3,7 +3,16 @@ import UIKit
 import AVKit
 import Swifty360Player
 
-public class Video360View: UIView, FlutterPlugin {
+public class Video360View: UIView, FlutterPlugin, Swifty360ViewDelegate {
+    
+    public func didUpdateCompassAngle(withViewController: Swifty360View, compassAngle: Float) {
+//        print("----------------- \(compassAngle) -----------------")
+    }
+    
+    public func userInitallyMovedCameraViaMethod(withView: Swifty360View, method: Swifty360UserInteractionMethod) {
+        
+    }
+    
     
     public static func register(with registrar: FlutterPluginRegistrar) {}
     
@@ -30,6 +39,10 @@ public class Video360View: UIView, FlutterPlugin {
         registrar.addMethodCallDelegate(self, channel: self.channel)
         registrar.addApplicationDelegate(self)
     }
+    
+    
+    private var posX: Double = 0.0
+    private var posY: Double = 0.0
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
@@ -68,17 +81,19 @@ public class Video360View: UIView, FlutterPlugin {
                 return
             }
             self.moveTime(time: time)
-            
-        case "gesture":
+
+        case "onPanUpdate":
             guard let argMaps = call.arguments as? Dictionary<String, Any>,
-                  let x = argMaps["x"] as? Double, x > 0,
-                  let y = argMaps["y"] as? Double, y > 0 else {
+                  let isStart = argMaps["isStart"] as? Bool,
+                  let x = argMaps["x"] as? Double,
+                  (0 ... Double(self.swifty360View.frame.maxX)) ~= x,
+                  let y = argMaps["y"] as? Double,
+                  (0 ... Double(self.swifty360View.frame.maxY)) ~= y else {
                 result(FlutterError(code: call.method, message: "Missing argument", details: nil))
                 return
             }
             let point = CGPoint(x: x, y: y)
-            print("----------------- \(point) -----------------")
-            self.swifty360View.cameraController.handlePan(point: point)
+            self.swifty360View.cameraController.handlePan(isStart: isStart, point: point)
             
         default:
             result(FlutterMethodNotImplemented)
@@ -103,6 +118,8 @@ extension Video360View {
                                            motionManager: motionManager)
         self.swifty360View.setup(player: self.player, motionManager: motionManager)
         self.addSubview(self.swifty360View)
+        
+        self.swifty360View.delegate = self
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.reorientVerticalCameraAngle))
         self.addGestureRecognizer(tapGestureRecognizer)

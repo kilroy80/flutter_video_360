@@ -81,9 +81,10 @@ class Video360Controller {
     }
   }
 
-  gesture(double x, double y) async {
+  onPanUpdate(bool isStart, double x, double y) async {
     try {
-      await _channel.invokeMethod<void>('gesture', {
+      await _channel.invokeMethod<void>('onPanUpdate', {
+        'isStart': isStart,
         'x': x,
         'y': y
       });
