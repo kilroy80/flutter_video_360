@@ -3,16 +3,7 @@ import UIKit
 import AVKit
 import Swifty360Player
 
-public class Video360View: UIView, FlutterPlugin, Swifty360ViewDelegate {
-    
-    public func didUpdateCompassAngle(withViewController: Swifty360View, compassAngle: Float) {
-//        print("----------------- \(compassAngle) -----------------")
-    }
-    
-    public func userInitallyMovedCameraViaMethod(withView: Swifty360View, method: Swifty360UserInteractionMethod) {
-        
-    }
-    
+public class Video360View: UIView, FlutterPlugin {
     
     public static func register(with registrar: FlutterPluginRegistrar) {}
     
@@ -118,15 +109,6 @@ extension Video360View {
                                            motionManager: motionManager)
         self.swifty360View.setup(player: self.player, motionManager: motionManager)
         self.addSubview(self.swifty360View)
-        
-        self.swifty360View.delegate = self
-        
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.reorientVerticalCameraAngle))
-        self.addGestureRecognizer(tapGestureRecognizer)
-    }
-    
-    @objc func reorientVerticalCameraAngle() {
-        self.swifty360View.reorientVerticalCameraAngleToHorizon(animated: true)
     }
     
     // 재생
