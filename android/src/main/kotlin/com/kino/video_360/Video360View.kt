@@ -73,6 +73,9 @@ class Video360View(private val activity: Activity, context: Context, messenger: 
                     videoView.seek(it)
                 }
             }
+            "duration" -> {
+                result.success(videoView.getCurrentPosition())
+            }
             "exitApp" -> {
                 android.os.Process.killProcess(android.os.Process.myPid())
             }

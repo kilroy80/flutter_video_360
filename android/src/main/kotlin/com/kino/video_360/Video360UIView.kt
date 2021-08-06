@@ -16,6 +16,7 @@ import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.source.smoothstreaming.DefaultSsChunkSource
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.ui.spherical.SphericalGLSurfaceView
 import com.google.android.exoplayer2.upstream.DataSource
@@ -58,6 +59,7 @@ class Video360UIView : FrameLayout, Player.EventListener {
         (vrPlayer.videoSurfaceView as SphericalGLSurfaceView)
             .setDefaultStereoMode(C.STEREO_MODE_STEREO_MESH)
         vrPlayer.useController = false
+//        vrPlayer.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
 
         bandwidthMeter = DefaultBandwidthMeter.Builder(context)
             .build()
@@ -105,7 +107,7 @@ class Video360UIView : FrameLayout, Player.EventListener {
         mediaSource?.let {
             player?.prepare(it)
             player?.addListener(this)
-            player?.playWhenReady = true
+//            player?.playWhenReady = true
 
             vrPlayer.player = player
         }
@@ -186,6 +188,10 @@ class Video360UIView : FrameLayout, Player.EventListener {
         }
     }
 
-    fun seekTo() {
+    fun getCurrentPosition(): Long {
+        player?.currentPosition?.let {
+            return it
+        }
+        return 0L
     }
 }

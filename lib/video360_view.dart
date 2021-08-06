@@ -27,6 +27,9 @@ class Video360View extends StatefulWidget {
 }
 
 class _Video360ViewState extends State<Video360View> with WidgetsBindingObserver {
+
+  late Video360Controller controller;
+
   @override
   void initState() {
     WidgetsBinding.instance?.addObserver(this);
@@ -44,9 +47,17 @@ class _Video360ViewState extends State<Video360View> with WidgetsBindingObserver
       );
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       return Container(
-        child: Video360IOSView(
-          viewType: 'kino_video_360',
-          onPlatformViewCreated: _onPlatformViewCreated,
+        child: GestureDetector(
+          child: Video360IOSView(
+            viewType: 'kino_video_360',
+            onPlatformViewCreated: _onPlatformViewCreated,
+          ),
+          onPanStart: (details) {
+            controller.gesture(details.localPosition.dx, details.localPosition.dy);
+          },
+          onPanUpdate: (details) {
+            controller.gesture(details.localPosition.dx, details.localPosition.dy);
+          },
         ),
       );
     }
@@ -67,13 +78,15 @@ class _Video360ViewState extends State<Video360View> with WidgetsBindingObserver
     print(box?.size.toString());
     var width = box?.size.width ?? 0.0;
     var heigt = box?.size.height ?? 0.0;
-    widget.onVideo360ViewCreated(Video360Controller(
+
+    controller = Video360Controller(
       id: id,
       url: widget.url,
       width: width,
       height: heigt,
       onCallback: widget.onCallback,
-    ));
+    );
+    widget.onVideo360ViewCreated(controller);
   }
 
   @override

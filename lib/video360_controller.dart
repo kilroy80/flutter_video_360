@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 
@@ -88,6 +89,14 @@ class Video360Controller {
         'x': x,
         'y': y
       });
+    } on PlatformException catch (e) {
+      print('${e.code}: ${e.message}');
+    }
+  }
+
+  getDuration() async {
+    try {
+      return await _channel.invokeMethod<int>('duration');
     } on PlatformException catch (e) {
       print('${e.code}: ${e.message}');
     }
