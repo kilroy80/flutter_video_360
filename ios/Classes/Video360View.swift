@@ -1,7 +1,6 @@
 import Flutter
 import UIKit
 import AVKit
-import Swifty360Player
 
 public class Video360View: UIView, FlutterPlugin {
     

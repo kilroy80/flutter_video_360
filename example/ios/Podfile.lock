@@ -1,17 +1,11 @@
 PODS:
   - Flutter (1.0.0)
-  - Swifty360Player (0.2.5)
   - video_360 (0.0.1):
     - Flutter
-    - Swifty360Player (~> 0.2.5)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - video_360 (from `.symlinks/plugins/video_360/ios`)
-
-SPEC REPOS:
-  trunk:
-    - Swifty360Player
 
 EXTERNAL SOURCES:
   Flutter:
@@ -21,9 +15,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
-  Swifty360Player: 56956060744f97f5f89340235fc85e2f9176c2a1
-  video_360: 263540abf988d514fd3a66a1c1409762cd470015
+  video_360: ee47ca2e574f2caa620f10c857b9a71b5ddf40c8
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.10.2
