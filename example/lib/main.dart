@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:video_360/video360_controller.dart';
 import 'package:video_360/video360_view.dart';
 
@@ -122,7 +123,7 @@ class _MyAppState extends State<MyApp> {
                       child: Text('--'),
                     ),
                   ],
-                )
+                ),
               ],
             )
           ],
