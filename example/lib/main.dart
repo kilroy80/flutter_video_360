@@ -38,18 +38,13 @@ class _MyAppState extends State<MyApp> {
         body: Stack(
           children: [
             Center(
-              child: GestureDetector(
-                child: Container(
-                  width: 320,
-                  height: 500,
-                  child: Video360View(
-                    onVideo360ViewCreated: _onVideo360ViewCreated,
-                    url: 'https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8',
-                  ),
+              child: Container(
+                width: 320,
+                height: 500,
+                child: Video360View(
+                  onVideo360ViewCreated: _onVideo360ViewCreated,
+                  url: 'https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8',
                 ),
-                onPanUpdate: (details) {
-                  controller.gesture(details.localPosition.dx, details.localPosition.dy);
-                },
               ),
             ),
             Column(
