@@ -13,12 +13,14 @@ class Video360View extends StatefulWidget {
   final Video360ViewCreatedCallback onVideo360ViewCreated;
 
   final String? url;
+  final bool? isAutoPlay;
   final Video360ControllerCallback? onCallback;
 
   const Video360View({
     Key? key,
     required this.onVideo360ViewCreated,
     this.url,
+    this.isAutoPlay = true,
     this.onCallback,
   }) : super(key: key);
 
@@ -84,6 +86,7 @@ class _Video360ViewState extends State<Video360View> with WidgetsBindingObserver
       url: widget.url,
       width: width,
       height: heigt,
+      isAutoPlay: widget.isAutoPlay,
       onCallback: widget.onCallback,
     );
     widget.onVideo360ViewCreated(controller);

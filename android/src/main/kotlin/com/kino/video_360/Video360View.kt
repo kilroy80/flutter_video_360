@@ -42,8 +42,11 @@ class Video360View(private val activity: Activity, context: Context, messenger: 
         when (call.method) {
             "init" -> {
                 val url: String? = call.argument("url")
-                url?.let {
-                    videoView.initializePlayer(url)
+                val isAutoPlay: Boolean? = call.argument("isAutoPlay")
+                url?.let { vUrl ->
+                    isAutoPlay?.let { autoPlay ->
+                        videoView.initializePlayer(vUrl, autoPlay)
+                    }
                 }
             }
             "resume" -> {

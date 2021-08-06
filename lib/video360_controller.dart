@@ -12,6 +12,7 @@ class Video360Controller {
     this.url,
     this.width,
     this.height,
+    this.isAutoPlay,
     this.onCallback,
   }) {
     _channel = MethodChannel('kino_video_360_$id');
@@ -24,6 +25,7 @@ class Video360Controller {
   final String? url;
   final double? width;
   final double? height;
+  final bool? isAutoPlay;
   final Video360ControllerCallback? onCallback;
 
   init() async {
@@ -31,6 +33,7 @@ class Video360Controller {
       await _channel.invokeMethod<void>('init', {
         'url': url,
         'width': width,
+        'isAutoPlay': isAutoPlay,
         'height': height,
       });
     } on PlatformException catch (e) {
