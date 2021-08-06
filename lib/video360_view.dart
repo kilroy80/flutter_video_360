@@ -53,10 +53,10 @@ class _Video360ViewState extends State<Video360View> with WidgetsBindingObserver
             onPlatformViewCreated: _onPlatformViewCreated,
           ),
           onPanStart: (details) {
-            controller.gesture(details.localPosition.dx, details.localPosition.dy);
+            controller.onPanUpdate(true, details.localPosition.dx, details.localPosition.dy);
           },
           onPanUpdate: (details) {
-            controller.gesture(details.localPosition.dx, details.localPosition.dy);
+            controller.onPanUpdate(false, details.localPosition.dx, details.localPosition.dy);
           },
         ),
       );
