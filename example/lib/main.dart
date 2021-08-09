@@ -75,7 +75,7 @@ class _MyAppState extends State<MyApp> {
                     ),
                     MaterialButton(
                       onPressed: () {
-                        controller.searchTime(80);
+                        controller.jumpTo(80000);
                       },
                       color: Colors.grey[100],
                       child: Text('1:20'),
@@ -87,14 +87,14 @@ class _MyAppState extends State<MyApp> {
                   children: [
                     MaterialButton(
                       onPressed: () {
-                        controller.moveTime(-20);
+                        controller.seekTo(-2000);
                       },
                       color: Colors.grey[100],
                       child: Text('<<'),
                     ),
                     MaterialButton(
                       onPressed: () {
-                        controller.moveTime(20);
+                        controller.seekTo(2000);
                       },
                       color: Colors.grey[100],
                       child: Text('>>'),
@@ -108,7 +108,7 @@ class _MyAppState extends State<MyApp> {
                     // Flexible(child: child),
                     MaterialButton(
                       onPressed: () {
-                        controller.searchTime(80);
+                        controller.jumpTo(80000);
                       },
                       color: Colors.grey[100],
                       child: Text('--'),

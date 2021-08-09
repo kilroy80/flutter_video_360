@@ -70,10 +70,16 @@ class Video360View(private val activity: Activity, context: Context, messenger: 
             "reset" -> {
                 videoView.reset()
             }
-            "moveTime" -> {
-                val seekTime: Double? = call.argument("moveTime")
+            "jumpTo" -> {
+                val seekTime: Double? = call.argument("millisecond")
                 seekTime?.let {
-                    videoView.seek(it)
+                    videoView.jumpTo(it)
+                }
+            }
+            "seekTo" -> {
+                val seekTime: Double? = call.argument("millisecond")
+                seekTime?.let {
+                    videoView.seekTo(it)
                 }
             }
             "duration" -> {

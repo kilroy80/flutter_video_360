@@ -65,20 +65,20 @@ class Video360Controller {
     }
   }
 
-  searchTime(double time) async {
+  jumpTo(double millisecond) async {
     try {
-      await _channel.invokeMethod<void>('searchTime', {
-        'searchTime': time
+      await _channel.invokeMethod<void>('jumpTo', {
+        'millisecond': millisecond
       });
     } on PlatformException catch (e) {
       print('${e.code}: ${e.message}');
     }
   }
 
-  moveTime(double time) async {
+  seekTo(double millisecond) async {
     try {
-      await _channel.invokeMethod<void>('moveTime', {
-        'moveTime': time
+      await _channel.invokeMethod<void>('seekTo', {
+        'millisecond': millisecond
       });
     } on PlatformException catch (e) {
       print('${e.code}: ${e.message}');

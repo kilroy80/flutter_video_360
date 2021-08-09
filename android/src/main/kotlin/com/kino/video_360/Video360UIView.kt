@@ -179,16 +179,26 @@ class Video360UIView : FrameLayout, Player.EventListener {
         initializePlayer(videoUrl, isAutoPlay)
     }
 
-    fun seek(secondTime: Double) {
+    fun seekTo(millisecond: Double) {
         val currentPos = player?.currentPosition
         val duration = player?.duration
         currentPos?.let { cur ->
             duration?.let { dur ->
-                var seekTime = cur + (secondTime * 1000)
+                var seekTime = cur + millisecond
                 if (seekTime < 0.0) seekTime = 0.0
                 if (seekTime > dur) seekTime = dur.toDouble()
                 player?.seekTo(seekTime.toLong())
             }
+        }
+    }
+
+    fun jumpTo(millisecond: Double) {
+        val duration = player?.duration
+        duration?.let { dur ->
+            var seekTime = millisecond
+            if (seekTime < 0.0) seekTime = 0.0
+            if (seekTime > dur) seekTime = dur.toDouble()
+            player?.seekTo(seekTime.toLong())
         }
     }
 
