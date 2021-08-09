@@ -35,6 +35,7 @@ public class Video360View: UIView, FlutterPlugin {
         case "init":
             guard let argMaps = call.arguments as? Dictionary<String, Any>,
                   let url = argMaps["url"] as? String,
+                  let videoURL = URL(string: url),
                   let isAutoPlay = argMaps["isAutoPlay"] as? Bool,
                   let isRepeat = argMaps["isRepeat"] as? Bool,
                   let width = argMaps["width"] as? Double,
@@ -42,7 +43,8 @@ public class Video360View: UIView, FlutterPlugin {
                 result(FlutterError(code: call.method, message: "Missing argument", details: nil))
                 return
             }
-            self.initView(url: url, width: width, height: height)
+            self.initView(videoURL: videoURL, width: width, height: height)
+            self.updateTime()
 
             if isAutoPlay {
                 self.checkPlayerState()
@@ -54,11 +56,9 @@ public class Video360View: UIView, FlutterPlugin {
                                                        name: .AVPlayerItemDidPlayToEndTime,
                                                        object: nil)
             }
-
-            self.updateTime()
+            
         case "dispose":
-            // TODO : dispose func implemention
-            break
+            self.dispose()
 
         case "play":
             self.play()
@@ -108,8 +108,7 @@ public class Video360View: UIView, FlutterPlugin {
 // MARK: - Interface
 extension Video360View {
 
-    private func initView(url: String, width: Double, height: Double) {
-        guard let videoURL = URL(string: url) else { return }
+    private func initView(videoURL: URL, width: Double, height: Double) {
         self.player = AVPlayer(url: videoURL)
 
         let motionManager = Swifty360MotionManager.shared
@@ -124,6 +123,12 @@ extension Video360View {
     // repeat
     @objc private func playerFinish(noti: NSNotification) {
         self.reset()
+    }
+    
+    private func dispose() {
+        self.timer = nil
+        self.player = nil
+        self.swifty360View = nil
     }
 
     // play
