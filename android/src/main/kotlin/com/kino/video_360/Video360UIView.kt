@@ -131,8 +131,10 @@ class Video360UIView : FrameLayout, Player.EventListener {
     }
 
     fun releasePlayer() {
-        player?.release()
-        player = null
+        if (player != null) {
+            player?.release()
+            player = null
+        }
     }
 
     override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
