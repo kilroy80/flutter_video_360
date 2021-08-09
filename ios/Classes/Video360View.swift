@@ -58,6 +58,7 @@ public class Video360View: UIView, FlutterPlugin {
             self.updateTime()
         case "dispose":
             // TODO : dispose func implemention
+            break
 
         case "play":
             self.play()

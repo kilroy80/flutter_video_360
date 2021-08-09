@@ -159,8 +159,5 @@ class Video360View(private val activity: Activity, context: Context, messenger: 
     }
 
     override fun dispose() {
-        if (videoView != null) {
-            videoView.releasePlayer()
-        }
     }
 }
