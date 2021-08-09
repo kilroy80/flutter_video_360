@@ -6,11 +6,11 @@ public class Video360View: UIView, FlutterPlugin {
 
     public static func register(with registrar: FlutterPluginRegistrar) {}
     var channel: FlutterMethodChannel!
-    
+
     private var timer: Timer?
     private var player: AVPlayer!
     private var swifty360View: Swifty360View!
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -43,11 +43,11 @@ public class Video360View: UIView, FlutterPlugin {
                 return
             }
             self.initView(url: url, width: width, height: height)
-            
+
             if isAutoPlay {
                 self.checkPlayerState()
             }
-            
+
             if isRepeat {
                 NotificationCenter.default.addObserver(self,
                                                        selector: #selector(self.playerFinish(noti:)),
@@ -56,6 +56,8 @@ public class Video360View: UIView, FlutterPlugin {
             }
 
             self.updateTime()
+        case "dispose":
+            // TODO : dispose func implemention
 
         case "play":
             self.play()
@@ -117,7 +119,7 @@ extension Video360View {
         self.swifty360View.setup(player: self.player, motionManager: motionManager)
         self.addSubview(self.swifty360View)
     }
-    
+
     // repeat
     @objc private func playerFinish(noti: NSNotification) {
         self.reset()

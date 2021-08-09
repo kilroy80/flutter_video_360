@@ -44,6 +44,14 @@ class Video360Controller {
     }
   }
 
+  dispose() async {
+    try {
+      await _channel.invokeMethod<void>('dispose');
+    } on PlatformException catch (e) {
+      print('${e.code}: ${e.message}');
+    }
+  }
+
   play() async {
     try {
       await _channel.invokeMethod<void>('play');
