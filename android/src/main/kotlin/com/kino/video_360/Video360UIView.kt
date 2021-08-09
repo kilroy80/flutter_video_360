@@ -101,6 +101,12 @@ class Video360UIView : FrameLayout, Player.EventListener {
         }
     }
 
+    fun setupData(url: String, autoPlay: Boolean, repeat: Boolean) {
+        videoUrl = url
+        isAutoPlay = autoPlay
+        isRepeat = repeat
+    }
+
     fun initializePlayer(url: String, autoPlay: Boolean, repeat: Boolean) {
         player = SimpleExoPlayer.Builder(context).build()
 
@@ -113,8 +119,12 @@ class Video360UIView : FrameLayout, Player.EventListener {
             player?.prepare(it)
             player?.addListener(this)
 
-//            if (isAutoPlay) player?.playWhenReady = isAutoPlay
-//            if (isRepeat) player?.repeatMode = Player.REPEAT_MODE_ALL
+            player?.playWhenReady = isAutoPlay
+            if (isRepeat) {
+                player?.repeatMode = Player.REPEAT_MODE_ALL
+            } else {
+                player?.repeatMode = Player.REPEAT_MODE_OFF
+            }
 
             vrPlayer.player = player
         }
