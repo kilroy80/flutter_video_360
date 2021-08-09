@@ -4,7 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 
-typedef void Video360ControllerCallback(String method, dynamic arguments);
+typedef Video360ControllerCallback = void Function(String method, dynamic arguments);
 
 class Video360Controller {
   Video360Controller({
@@ -13,6 +13,7 @@ class Video360Controller {
     this.width,
     this.height,
     this.isAutoPlay,
+    this.isRepeat,
     this.onCallback,
   }) {
     _channel = MethodChannel('kino_video_360_$id');
@@ -26,6 +27,7 @@ class Video360Controller {
   final double? width;
   final double? height;
   final bool? isAutoPlay;
+  final bool? isRepeat;
   final Video360ControllerCallback? onCallback;
 
   init() async {
@@ -34,6 +36,7 @@ class Video360Controller {
         'url': url,
         'width': width,
         'isAutoPlay': isAutoPlay,
+        'isRepeat': isRepeat,
         'height': height,
       });
     } on PlatformException catch (e) {
@@ -86,14 +89,16 @@ class Video360Controller {
   }
 
   onPanUpdate(bool isStart, double x, double y) async {
-    try {
-      await _channel.invokeMethod<void>('onPanUpdate', {
-        'isStart': isStart,
-        'x': x,
-        'y': y
-      });
-    } on PlatformException catch (e) {
-      print('${e.code}: ${e.message}');
+    if (Platform.isIOS) {
+      try {
+        await _channel.invokeMethod<void>('onPanUpdate', {
+          'isStart': isStart,
+          'x': x,
+          'y': y
+        });
+      } on PlatformException catch (e) {
+        print('${e.code}: ${e.message}');
+      }
     }
   }
 
@@ -112,7 +117,7 @@ class Video360Controller {
       case 'play':
         break;
 
-      case 'test':
+      case 'updateTIme':
         var duration = call.arguments['duration'];
         var total = call.arguments['total'];
         // print('$duration / $total');
