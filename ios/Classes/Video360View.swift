@@ -6,10 +6,15 @@ public class Video360View: UIView, FlutterPlugin {
 
     public static func register(with registrar: FlutterPluginRegistrar) {}
     var channel: FlutterMethodChannel!
-
+    
+    private var isAutoReplay: Bool?
     private var timer: Timer?
     private var player: AVPlayer!
     private var swifty360View: Swifty360View!
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 
     public func initFlutter(
         viewIdentifier viewId: Int64,
@@ -60,7 +65,7 @@ public class Video360View: UIView, FlutterPlugin {
                 result(FlutterError(code: call.method, message: "Missing argument", details: nil))
                 return
             }
-            self.searchTime(time: time / 1000.0)
+            self.jumpTo(time: time / 1000.0)
 
         case "seekTo":
             guard let argMaps = call.arguments as? Dictionary<String, Any>,
@@ -68,7 +73,7 @@ public class Video360View: UIView, FlutterPlugin {
                 result(FlutterError(code: call.method, message: "Missing argument", details: nil))
                 return
             }
-            self.moveTime(time: time / 1000.0)
+            self.seekTo(time: time / 1000.0)
 
         case "onPanUpdate":
             guard let argMaps = call.arguments as? Dictionary<String, Any>,
@@ -106,7 +111,15 @@ extension Video360View {
                                            motionManager: motionManager)
         self.swifty360View.setup(player: self.player, motionManager: motionManager)
         self.addSubview(self.swifty360View)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.playerFinish(noti:)), name: .AVPlayerItemDidPlayToEndTime, object: nil)
     }
+    
+    @objc private func playerFinish(noti: NSNotification) {
+        guard let temp = self.isAutoReplay, temp else { return }
+        self.reset()
+    }
+    
 
     // 재생
     private func play() {
@@ -120,18 +133,18 @@ extension Video360View {
 
     // 처음부터 다시 재생
     private func reset() {
-        self.searchTime(time: .zero)
+        self.jumpTo(time: .zero)
     }
 
     // 지정 시간에서 재생
-    private func searchTime(time: Double) {
+    private func jumpTo(time: Double) {
         let sec = CMTimeMakeWithSeconds(Float64(time), preferredTimescale: Int32(NSEC_PER_SEC))
         self.swifty360View.player.seek(to: sec)
         self.checkPlayerState()
     }
 
     // 현재 시간 기준 앞뒤 이동
-    private func moveTime(time: Double) {
+    private func seekTo(time: Double) {
         let current = self.swifty360View.player.currentTime()
         let sec = CMTimeMakeWithSeconds(Float64(time), preferredTimescale: Int32(NSEC_PER_SEC))
         self.swifty360View.player.seek(to: current + sec)
@@ -149,16 +162,16 @@ extension Video360View {
             let durationMinutes = duration / 60
             let durationString = String(format: "%02d:%02d", durationMinutes, durationSeconds)
 
-            let itemDuration = self.player.currentItem?.duration
-            let second = CMTimeGetSeconds(itemDuration ?? CMTimeMake(value: 0, timescale: 1))
-            if second.isNaN {
+            let totalDuration = self.player.currentItem?.duration
+            let totalCMTime = CMTimeGetSeconds(totalDuration ?? CMTimeMake(value: 0, timescale: 1))
+            if totalCMTime.isNaN {
                 return
             }
-            let total = Int(second)
+            let total = Int(totalCMTime)
             let totalSeconds = total % 60
             let totalMinutes = total / 60
             let totalString = String(format: "%02d:%02d", totalMinutes, totalSeconds)
-
+            
             self.channel.invokeMethod("test", arguments: ["duration": durationString, "total": totalString])
         }
     }
@@ -184,7 +197,6 @@ extension Video360View {
               currentItem.isPlaybackLikelyToKeepUp,
               !self.player.isPlaying else { return }
 
-        print("Playing")
         self.swifty360View.play()
 
         self.timer?.invalidate()
