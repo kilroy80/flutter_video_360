@@ -33,6 +33,7 @@ class Video360UIView : FrameLayout, Player.EventListener {
     private var player: SimpleExoPlayer? = null
     private var videoUrl = ""
     private var isAutoPlay = true
+    private var isRepeat = false
 
     private lateinit var bandwidthMeter: DefaultBandwidthMeter
 
@@ -100,18 +101,20 @@ class Video360UIView : FrameLayout, Player.EventListener {
         }
     }
 
-    fun initializePlayer(url: String, autoPlay: Boolean) {
+    fun initializePlayer(url: String, autoPlay: Boolean, repeat: Boolean) {
         player = SimpleExoPlayer.Builder(context).build()
 
         videoUrl = url
         isAutoPlay = autoPlay
+        isRepeat = repeat
 
         val mediaSource = buildMediaSource(videoUrl, buildDataSourceFactory(context, ""))
         mediaSource?.let {
             player?.prepare(it)
             player?.addListener(this)
 
-            if (isAutoPlay) player?.playWhenReady = isAutoPlay
+//            if (isAutoPlay) player?.playWhenReady = isAutoPlay
+//            if (isRepeat) player?.repeatMode = Player.REPEAT_MODE_ALL
 
             vrPlayer.player = player
         }
@@ -137,13 +140,13 @@ class Video360UIView : FrameLayout, Player.EventListener {
 
     fun onStart() {
         if (Build.VERSION.SDK_INT > 23) {
-            initializePlayer(videoUrl, isAutoPlay)
+            initializePlayer(videoUrl, isAutoPlay, isRepeat)
         }
     }
 
     fun onResume() {
         if ((Build.VERSION.SDK_INT <= 23 || player == null)) {
-            initializePlayer(videoUrl, isAutoPlay)
+            initializePlayer(videoUrl, isAutoPlay, isRepeat)
         }
     }
 
@@ -176,7 +179,7 @@ class Video360UIView : FrameLayout, Player.EventListener {
 
     fun reset() {
         releasePlayer()
-        initializePlayer(videoUrl, isAutoPlay)
+        initializePlayer(videoUrl, isAutoPlay, isRepeat)
     }
 
     fun seekTo(millisecond: Double) {

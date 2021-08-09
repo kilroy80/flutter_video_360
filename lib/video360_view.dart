@@ -14,6 +14,7 @@ class Video360View extends StatefulWidget {
 
   final String? url;
   final bool? isAutoPlay;
+  final bool? isRepeat;
   final Video360ControllerCallback? onCallback;
 
   const Video360View({
@@ -21,6 +22,7 @@ class Video360View extends StatefulWidget {
     required this.onVideo360ViewCreated,
     this.url,
     this.isAutoPlay = true,
+    this.isRepeat = true,
     this.onCallback,
   }) : super(key: key);
 
@@ -76,8 +78,7 @@ class _Video360ViewState extends State<Video360View> with WidgetsBindingObserver
 
     var pixelRatio = window.devicePixelRatio;
     RenderBox? box = context.findRenderObject() as RenderBox?;
-    print(pixelRatio.toString());
-    print(box?.size.toString());
+
     var width = box?.size.width ?? 0.0;
     var heigt = box?.size.height ?? 0.0;
 
@@ -87,6 +88,7 @@ class _Video360ViewState extends State<Video360View> with WidgetsBindingObserver
       width: width,
       height: heigt,
       isAutoPlay: widget.isAutoPlay,
+      isRepeat: widget.isRepeat,
       onCallback: widget.onCallback,
     );
     widget.onVideo360ViewCreated(controller);

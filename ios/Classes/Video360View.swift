@@ -7,7 +7,6 @@ public class Video360View: UIView, FlutterPlugin {
     public static func register(with registrar: FlutterPluginRegistrar) {}
     var channel: FlutterMethodChannel!
     
-    private var isAutoReplay: Bool?
     private var timer: Timer?
     private var player: AVPlayer!
     private var swifty360View: Swifty360View!
@@ -23,7 +22,6 @@ public class Video360View: UIView, FlutterPlugin {
     ) {
 
         let viewName = String(format: "kino_video_360_%lld", viewId)
-        print(viewName)
         self.channel = FlutterMethodChannel(name: viewName,
                                             binaryMessenger: registrar.messenger())
 
@@ -36,16 +34,25 @@ public class Video360View: UIView, FlutterPlugin {
         switch call.method {
         case "init":
             guard let argMaps = call.arguments as? Dictionary<String, Any>,
+                  let url = argMaps["url"] as? String,
                   let isAutoPlay = argMaps["isAutoPlay"] as? Bool,
+                  let isRepeat = argMaps["isRepeat"] as? Bool,
                   let width = argMaps["width"] as? Double,
                   let height = argMaps["height"] as? Double else {
                 result(FlutterError(code: call.method, message: "Missing argument", details: nil))
                 return
             }
-            self.initView(width: width, height: height)
-
+            self.initView(url: url, width: width, height: height)
+            
             if isAutoPlay {
                 self.checkPlayerState()
+            }
+            
+            if isRepeat {
+                NotificationCenter.default.addObserver(self,
+                                                       selector: #selector(self.playerFinish(noti:)),
+                                                       name: .AVPlayerItemDidPlayToEndTime,
+                                                       object: nil)
             }
 
             self.updateTime()
@@ -65,7 +72,7 @@ public class Video360View: UIView, FlutterPlugin {
                 result(FlutterError(code: call.method, message: "Missing argument", details: nil))
                 return
             }
-            self.jumpTo(time: time / 1000.0)
+            self.jumpTo(second: time / 1000.0)
 
         case "seekTo":
             guard let argMaps = call.arguments as? Dictionary<String, Any>,
@@ -73,7 +80,7 @@ public class Video360View: UIView, FlutterPlugin {
                 result(FlutterError(code: call.method, message: "Missing argument", details: nil))
                 return
             }
-            self.seekTo(time: time / 1000.0)
+            self.seekTo(second: time / 1000.0)
 
         case "onPanUpdate":
             guard let argMaps = call.arguments as? Dictionary<String, Any>,
@@ -95,13 +102,11 @@ public class Video360View: UIView, FlutterPlugin {
 }
 
 
-
 // MARK: - Interface
-
 extension Video360View {
 
-    private func initView(width: Double, height: Double) {
-        guard let videoURL = URL(string: "http://www.solusvision.co.kr/arportal/gosam_lake/gosam_lake1/HLS/gosam_lake1.m3u8") else { return }
+    private func initView(url: String, width: Double, height: Double) {
+        guard let videoURL = URL(string: url) else { return }
         self.player = AVPlayer(url: videoURL)
 
         let motionManager = Swifty360MotionManager.shared
@@ -111,47 +116,44 @@ extension Video360View {
                                            motionManager: motionManager)
         self.swifty360View.setup(player: self.player, motionManager: motionManager)
         self.addSubview(self.swifty360View)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.playerFinish(noti:)), name: .AVPlayerItemDidPlayToEndTime, object: nil)
     }
     
+    // repeat
     @objc private func playerFinish(noti: NSNotification) {
-        guard let temp = self.isAutoReplay, temp else { return }
         self.reset()
     }
-    
 
-    // 재생
+    // play
     private func play() {
         self.swifty360View.player.play()
     }
 
-    // 정지
+    // stop
     private func stop() {
         self.swifty360View.player.pause()
     }
 
-    // 처음부터 다시 재생
+    // reset
     private func reset() {
-        self.jumpTo(time: .zero)
+        self.jumpTo(second: .zero)
     }
 
-    // 지정 시간에서 재생
-    private func jumpTo(time: Double) {
-        let sec = CMTimeMakeWithSeconds(Float64(time), preferredTimescale: Int32(NSEC_PER_SEC))
+    // jumpTo
+    private func jumpTo(second: Double) {
+        let sec = CMTimeMakeWithSeconds(Float64(second), preferredTimescale: Int32(NSEC_PER_SEC))
         self.swifty360View.player.seek(to: sec)
         self.checkPlayerState()
     }
 
-    // 현재 시간 기준 앞뒤 이동
-    private func seekTo(time: Double) {
+    // seekTo
+    private func seekTo(second: Double) {
         let current = self.swifty360View.player.currentTime()
-        let sec = CMTimeMakeWithSeconds(Float64(time), preferredTimescale: Int32(NSEC_PER_SEC))
+        let sec = CMTimeMakeWithSeconds(Float64(second), preferredTimescale: Int32(NSEC_PER_SEC))
         self.swifty360View.player.seek(to: current + sec)
         self.checkPlayerState()
     }
 
-    // 재생 시간 업데이트
+    // updateTime
     private func updateTime() {
         let interval = CMTime(seconds: 1, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         self.player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
@@ -171,17 +173,15 @@ extension Video360View {
             let totalSeconds = total % 60
             let totalMinutes = total / 60
             let totalString = String(format: "%02d:%02d", totalMinutes, totalSeconds)
-            
-            self.channel.invokeMethod("test", arguments: ["duration": durationString, "total": totalString])
+
+            self.channel.invokeMethod("updateTIme", arguments: ["duration": durationString, "total": totalString])
         }
     }
 }
 
 
-
 extension Video360View {
-
-    // 첫 생성 및 재생 시간 이동 시 영상 로드 시간동안 상태를 확인하여 재생이 가능할때 바로 시작
+    // check player state - for auto play
     private func checkPlayerState() {
         self.timer = Timer(timeInterval: 0.5,
                            target: self,
@@ -203,7 +203,6 @@ extension Video360View {
         self.timer = nil
     }
 }
-
 
 
 // MARK: - AVPlayer Extension
