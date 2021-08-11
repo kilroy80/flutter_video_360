@@ -9,7 +9,7 @@ public class Video360ViewFactoy: NSObject, FlutterPlatformViewFactory {
         self.registrar = registrar
         super.init()
     }
-
+    
     public func create(
         withFrame frame: CGRect,
         viewIdentifier viewId: Int64,
