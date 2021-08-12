@@ -8,7 +8,6 @@ class Video360View: UIView, FlutterPlugin {
     
     private let channel: FlutterMethodChannel
     
-    private var playerTimeObserverToken: Any?
     private var timer: Timer?
     private var player: AVPlayer!
     private var swifty360View: Swifty360View!
@@ -18,6 +17,21 @@ class Video360View: UIView, FlutterPlugin {
         
         super.init(frame: .zero)
         
+        self.addChannel()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
+
+// MARK: - Interface
+extension Video360View {
+    
+    // flutter channel
+    private func addChannel() {
         self.channel.setMethodCallHandler { [weak self] call, result in
             guard let self = self else { return }
             
@@ -95,21 +109,10 @@ class Video360View: UIView, FlutterPlugin {
         }
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-
-
-// MARK: - Interface
-extension Video360View {
-    
     // 360View Init
     private func initView(videoURL: URL, width: Double, height: Double) {
         self.player = AVPlayer(url: videoURL)
         let motionManager = Swifty360MotionManager.shared
-        
         self.swifty360View = Swifty360View(withFrame: CGRect(x: 0.0, y: 0.0, width: width, height: height),
                                            player: self.player,
                                            motionManager: motionManager)
@@ -124,7 +127,7 @@ extension Video360View {
     
     //dispose
     func dispose() {
-        print("----------------- dispose -----------------")
+        
     }
     
     // play
@@ -160,7 +163,7 @@ extension Video360View {
     // s
     private func updateTime() {
         let interval = CMTime(seconds: 1, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-        self.playerTimeObserverToken = self.player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
+        self.player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
             guard let self = self else { return }
             
             let duration = Int(CMTimeGetSeconds(time))
@@ -186,13 +189,13 @@ extension Video360View {
     private func checkPlayerState() {
         self.timer = Timer(timeInterval: 0.5,
                            target: self,
-                           selector: #selector(self.check),
+                           selector: #selector(self.checkReadyToPlay),
                            userInfo: nil,
                            repeats: true)
         RunLoop.main.add(self.timer!, forMode: .common)
     }
     
-    @objc private func check() {
+    @objc private func checkReadyToPlay() {
         guard self.player != nil,
               let currentItem = self.player.currentItem,
               currentItem.status == AVPlayerItem.Status.readyToPlay,

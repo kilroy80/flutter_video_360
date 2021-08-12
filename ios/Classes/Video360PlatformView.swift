@@ -11,8 +11,8 @@ class Video360PlatformView: NSObject, FlutterPlatformView {
         arguments args: Any?,
         flutterRegistrar registrar: FlutterPluginRegistrar
     ) {
-        _view = UIView(frame: frame)
-        _view.backgroundColor = UIColor.black
+        self._view = UIView(frame: frame)
+        self._view.backgroundColor = .yellow
         
         super.init()
         
@@ -20,11 +20,11 @@ class Video360PlatformView: NSObject, FlutterPlatformView {
             viewId: String(format: "kino_video_360_%lld", viewId),
             messenger: registrar.messenger()
         )
-        nativeView.frame = _view.bounds
-        _view.addSubview(nativeView)
+        nativeView.frame = self._view.bounds
+        self._view.addSubview(nativeView)
     }
     
     func view() -> UIView {
-        return _view
+        return self._view
     }
 }
