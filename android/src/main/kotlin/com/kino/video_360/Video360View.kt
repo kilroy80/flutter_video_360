@@ -6,6 +6,7 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,8 @@ import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.platform.PlatformView
+import java.util.*
+import kotlin.collections.HashMap
 
 class Video360View(private val activity: Activity, context: Context, messenger: BinaryMessenger, id: Int)
     : PlatformView, MethodChannel.MethodCallHandler {
@@ -25,6 +28,7 @@ class Video360View(private val activity: Activity, context: Context, messenger: 
     lateinit var activityLifecycleCallbacks: Application.ActivityLifecycleCallbacks
 
     private var videoView: Video360UIView
+    private var timer: Timer? = null
 
     init {
         methodChannel.setMethodCallHandler(this)
@@ -48,6 +52,7 @@ class Video360View(private val activity: Activity, context: Context, messenger: 
                     isAutoPlay?.let { autoPlay ->
                         isRepeat?.let { repeat ->
                             videoView.initializePlayer(vUrl, autoPlay, repeat)
+                            updateTime()
                         }
                     }
                 }
@@ -58,10 +63,12 @@ class Video360View(private val activity: Activity, context: Context, messenger: 
             }
             "pause" -> {
                 Log.i(TAG, "pause")
+                updateTimeCancel()
                 onPause()
             }
             "dispose" -> {
                 Log.i(TAG, "dispose")
+                updateTimeCancel()
                 dispose()
             }
             "play" -> {
@@ -93,6 +100,33 @@ class Video360View(private val activity: Activity, context: Context, messenger: 
             }
             else -> {
             }
+        }
+    }
+
+    private fun updateTime() {
+
+        timer = Timer()
+        val timerTask: TimerTask = object : TimerTask() {
+            override fun run() {
+                val cur = videoView.getCurrentPosition()
+                val dur = videoView.getDuration()
+
+                val dataMap = HashMap<String, Int>()
+                
+                dataMap["duration"] = cur.toInt()
+                dataMap["total"] = dur.toInt()
+
+                Handler(Looper.getMainLooper()).post{
+                    methodChannel.invokeMethod("updateTime", dataMap)
+                }
+            }
+        }
+        timer?.schedule(timerTask, 0, 100)
+    }
+
+    private fun updateTimeCancel() {
+        timer?.let {
+            it.cancel()
         }
     }
 

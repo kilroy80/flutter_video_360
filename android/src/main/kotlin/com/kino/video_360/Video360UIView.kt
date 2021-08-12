@@ -223,4 +223,11 @@ class Video360UIView : FrameLayout, Player.EventListener {
         }
         return 0L
     }
+
+    fun getDuration(): Long {
+        player?.duration?.let {
+            return it
+        }
+        return 0L
+    }
 }
