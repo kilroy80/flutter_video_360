@@ -3,8 +3,10 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:video_360/src/video360_play_info.dart';
 
 typedef Video360ControllerCallback = void Function(String method, dynamic arguments);
+typedef Video360ControllerPlayInfo = void Function(Video360PlayInfo playInfo);
 
 class Video360Controller {
   Video360Controller({
@@ -15,6 +17,7 @@ class Video360Controller {
     this.isAutoPlay,
     this.isRepeat,
     this.onCallback,
+    this.onPlayInfo,
   }) {
     _channel = MethodChannel('kino_video_360_$id');
     _channel.setMethodCallHandler(_handleMethodCalls);
@@ -29,6 +32,7 @@ class Video360Controller {
   final bool? isAutoPlay;
   final bool? isRepeat;
   final Video360ControllerCallback? onCallback;
+  final Video360ControllerPlayInfo? onPlayInfo;
 
   init() async {
     try {
@@ -118,17 +122,17 @@ class Video360Controller {
     }
   }
 
-
   // flutter -> android / ios callback handle
   Future<dynamic> _handleMethodCalls(MethodCall call) async {
     switch (call.method) {
       case 'play':
         break;
 
-      case 'updateTIme':
+      case 'updateTime':
         var duration = call.arguments['duration'];
         var total = call.arguments['total'];
-        // print('$duration / $total');
+
+        onPlayInfo?.call(Video360PlayInfo(duration: duration, total: total));
         break;
 
       default:

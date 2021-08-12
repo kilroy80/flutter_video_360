@@ -2,9 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:video_360/video360_android_view.dart';
-import 'package:video_360/video360_controller.dart';
-import 'package:video_360/video360_ios_view.dart';
+import 'package:video_360/src/video360_android_view.dart';
+import 'package:video_360/src/video360_controller.dart';
+import 'package:video_360/src/video360_ios_view.dart';
 
 typedef Video360ViewCreatedCallback = void Function(Video360Controller controller);
 typedef PlatformViewCreatedCallback = void Function(int id);
@@ -16,6 +16,7 @@ class Video360View extends StatefulWidget {
   final bool? isAutoPlay;
   final bool? isRepeat;
   final Video360ControllerCallback? onCallback;
+  final Video360ControllerPlayInfo? onPlayInfo;
 
   const Video360View({
     Key? key,
@@ -24,6 +25,7 @@ class Video360View extends StatefulWidget {
     this.isAutoPlay = true,
     this.isRepeat = true,
     this.onCallback,
+    this.onPlayInfo,
   }) : super(key: key);
 
   @override
@@ -90,6 +92,7 @@ class _Video360ViewState extends State<Video360View> with WidgetsBindingObserver
       isAutoPlay: widget.isAutoPlay,
       isRepeat: widget.isRepeat,
       onCallback: widget.onCallback,
+      onPlayInfo: widget.onPlayInfo,
     );
     widget.onVideo360ViewCreated(controller);
   }

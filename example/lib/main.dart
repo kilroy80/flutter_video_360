@@ -1,8 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:video_360/video360_controller.dart';
-import 'package:video_360/video360_view.dart';
+import 'package:video_360/video_360_plugin.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +16,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 
   late Video360Controller controller;
+  String durationText = '';
+  String totalText = '';
 
   @override
   void initState() {
@@ -44,6 +45,12 @@ class _MyAppState extends State<MyApp> {
               child: Video360View(
                 onVideo360ViewCreated: _onVideo360ViewCreated,
                 url: 'https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8',
+                onPlayInfo: (Video360PlayInfo info) {
+                  setState(() {
+                    durationText = info.duration.toString();
+                    totalText = info.total.toString();
+                  });
+                },
               ),
             ),
           ),
@@ -101,7 +108,7 @@ class _MyAppState extends State<MyApp> {
                   ),
                   Flexible(
                     child: Center(
-                      child: Text("00:00"
+                      child: Text(durationText + ' / ' + totalText
                       ),
                     ),
                   ),
