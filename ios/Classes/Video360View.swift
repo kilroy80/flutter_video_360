@@ -127,7 +127,8 @@ extension Video360View {
     
     //dispose
     func dispose() {
-        
+        // auto repeat notification remove
+        NotificationCenter.default.removeObserver(self)
     }
     
     // play
@@ -162,26 +163,15 @@ extension Video360View {
     
     // s
     private func updateTime() {
-        let interval = CMTime(seconds: 1, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        let interval = CMTime(seconds: 0.01, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         self.player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
             guard let self = self else { return }
             
-            let duration = Int(CMTimeGetSeconds(time))
-            let durationSeconds = duration % 60
-            let durationMinutes = duration / 60
-            let durationString = String(format: "%02d:%02d", durationMinutes, durationSeconds)
-            
-            let totalDuration = self.player.currentItem?.duration
-            let totalCMTime = CMTimeGetSeconds(totalDuration ?? CMTimeMake(value: 0, timescale: 1))
-            if totalCMTime.isNaN {
-                return
-            }
-            let total = Int(totalCMTime)
-            let totalSeconds = total % 60
-            let totalMinutes = total / 60
-            let totalString = String(format: "%02d:%02d", totalMinutes, totalSeconds)
-            
-            self.channel.invokeMethod("updateTIme", arguments: ["duration": durationString, "total": totalString])
+            let duration = Int(Float(Int(time.value)) * 0.000001)
+            let totalDuration = self.player.currentItem?.duration ?? .zero
+            let total = Int(totalDuration.value)
+
+            self.channel.invokeMethod("updateTIme", arguments: ["duration": duration, "total": total])
         }
     }
     
