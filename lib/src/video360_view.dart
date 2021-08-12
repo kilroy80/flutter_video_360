@@ -94,6 +94,7 @@ class _Video360ViewState extends State<Video360View> with WidgetsBindingObserver
       onCallback: widget.onCallback,
       onPlayInfo: widget.onPlayInfo,
     );
+    controller.updateTime();
     widget.onVideo360ViewCreated(controller);
   }
 

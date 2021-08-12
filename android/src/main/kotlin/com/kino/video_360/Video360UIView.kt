@@ -217,6 +217,10 @@ class Video360UIView : FrameLayout, Player.EventListener {
         }
     }
 
+    fun getPlaying(): Boolean {
+        return player?.isPlaying == true
+    }
+
     fun getCurrentPosition(): Long {
         player?.currentPosition?.let {
             return it

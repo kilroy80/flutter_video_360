@@ -114,27 +114,56 @@ class Video360Controller {
     }
   }
 
+  getPlaying() async {
+    if (Platform.isAndroid) {
+      try {
+        return await _channel.invokeMethod<bool>('playing');
+      } on PlatformException catch (e) {
+        print('${e.code}: ${e.message}');
+      }
+    }
+  }
+
+  getCurrentPosition() async {
+    if (Platform.isAndroid) {
+      try {
+        return await _channel.invokeMethod<int>('currentPosition');
+      } on PlatformException catch (e) {
+        print('${e.code}: ${e.message}');
+      }
+    }
+  }
+
   getDuration() async {
-    try {
-      return await _channel.invokeMethod<int>('duration');
-    } on PlatformException catch (e) {
-      print('${e.code}: ${e.message}');
+    if (Platform.isAndroid) {
+      try {
+        return await _channel.invokeMethod<int>('duration');
+      } on PlatformException catch (e) {
+        print('${e.code}: ${e.message}');
+      }
+    }
+  }
+
+  updateTime() async {
+    if (Platform.isAndroid) {
+      Stream.periodic(Duration(milliseconds: 100), (x) => x).listen((event) async {
+        var duration = await getCurrentPosition();
+        var total = await getDuration();
+        var isPlaying = await getPlaying();
+        onPlayInfo?.call(Video360PlayInfo(duration: duration, total: total, isPlaying: isPlaying));
+      });
     }
   }
 
   // flutter -> android / ios callback handle
   Future<dynamic> _handleMethodCalls(MethodCall call) async {
     switch (call.method) {
-      case 'play':
-        break;
-
+      // for iOS updateTime
       case 'updateTime':
         var duration = call.arguments['duration'];
         var total = call.arguments['total'];
-
-        onPlayInfo?.call(Video360PlayInfo(duration: duration, total: total));
+        onPlayInfo?.call(Video360PlayInfo(duration: duration, total: total, isPlaying: false));
         break;
-
       default:
         print('Unknowm method ${call.method} ');
         break;
