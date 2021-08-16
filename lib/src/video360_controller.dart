@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:video_360/src/video360_play_info.dart';
 
@@ -33,6 +34,8 @@ class Video360Controller {
   final bool? isRepeat;
   final Video360ControllerCallback? onCallback;
   final Video360ControllerPlayInfo? onPlayInfo;
+
+  StreamSubscription? playInfoStream;
 
   init() async {
     try {
@@ -144,9 +147,15 @@ class Video360Controller {
     }
   }
 
+  // This function must be called only once.
   updateTime() async {
     if (Platform.isAndroid) {
-      Stream.periodic(Duration(milliseconds: 100), (x) => x).listen((event) async {
+      if (playInfoStream != null) {
+        playInfoStream?.cancel();
+        playInfoStream = null;
+      }
+
+      playInfoStream = Stream.periodic(Duration(milliseconds: 100), (x) => x).listen((event) async {
         var duration = await getCurrentPosition();
         var total = await getDuration();
         var isPlaying = await getPlaying();
@@ -162,7 +171,8 @@ class Video360Controller {
       case 'updateTime':
         var duration = call.arguments['duration'];
         var total = call.arguments['total'];
-        onPlayInfo?.call(Video360PlayInfo(duration: duration, total: total, isPlaying: false));
+        var isPlaing = call.arguments['isPlaying'];
+        onPlayInfo?.call(Video360PlayInfo(duration: duration, total: total, isPlaying: isPlaing));
         break;
       default:
         print('Unknowm method ${call.method} ');

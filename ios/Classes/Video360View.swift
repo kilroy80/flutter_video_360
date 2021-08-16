@@ -170,8 +170,9 @@ extension Video360View {
             let duration = Int(Float(Int(time.value)) * 0.000001)
             let totalDuration = self.player.currentItem?.duration ?? .zero
             let total = Int(totalDuration.value)
+            let isPlaying = self.player?.isPlaying
 
-            self.channel.invokeMethod("updateTime", arguments: ["duration": duration, "total": total])
+            self.channel.invokeMethod("updateTime", arguments: ["duration": duration, "total": total, "isPlaying": isPlaying])
         }
     }
 
