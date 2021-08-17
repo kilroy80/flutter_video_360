@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:video_360/video_360_plugin.dart';
 
@@ -16,6 +14,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 
   late Video360Controller controller;
+
   String durationText = '';
   String totalText = '';
 
@@ -34,7 +33,7 @@ class _MyAppState extends State<MyApp> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Plugin example app'),
+        title: const Text('Video 360 Plugin example app'),
       ),
       body: Stack(
         children: [
@@ -107,18 +106,12 @@ class _MyAppState extends State<MyApp> {
                     child: Text('>>'),
                   ),
                   Flexible(
-                    child: Center(
-                      child: Text(durationText + ' / ' + totalText
-                      ),
+                    child: MaterialButton(
+                      onPressed: () {
+                      },
+                      color: Colors.grey[100],
+                      child: Text(durationText + ' / ' + totalText),
                     ),
-                  ),
-                  // Flexible(child: child),
-                  MaterialButton(
-                    onPressed: () {
-                      controller.jumpTo(80000);
-                    },
-                    color: Colors.grey[100],
-                    child: Text('--'),
                   ),
                 ],
               )

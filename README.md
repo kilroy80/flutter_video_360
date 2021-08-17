@@ -1,6 +1,7 @@
 # video_360
 
-Simple 360 video player plugin
+Simple 360 video player plugin 
+(Android, iOS support)
 
 ## Getting Started
 
@@ -8,10 +9,9 @@ The Android uses the open source [Google ExoPlayer](https://github.com/google/Ex
 
 >Google ExoPlayer Version: 2.12.1
 
-Unfortunately, iOS will support later.
+The iOS users the open source [Swifty360Player](https://github.com/abdullahselek/Swifty360Player)
 
-If you need all the platforms,
-Uses [video_player_360](https://pub.dev/packages/video_player_360)
+>Swifty360Player Version: 0.2.5
 
 ## Installation
 
@@ -19,40 +19,51 @@ Add pubspec.yaml dependencies.
 
 ``` dart
 dependencies:
-  video_360: ^0.0.2
+  video_360: ^0.0.3
 ```
 
-Add AndroidManifest.xml
+Android Requirements
+>Minimum SDK Target : 16
 
-``` kotlin
-<activity
-    android:name="com.kino.video_360.VRActivity"
-    android:theme="@style/NormalTheme"
-    android:launchMode="singleTask"
-    android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|layoutDirection"
-    android:imeOptions="flagNoExtractUi|flagNoFullscreen"
-    android:windowSoftInputMode="adjustNothing|stateHidden" />
-```
+iOS Requirements
+>Minimum iOS Target : 11.0<br>
+>Swift Version : 5.x
+
 ## How to use
 
 importing the libray:
 ``` dart
-import 'package:video_360/video_360.dart';
+import 'package:video_360/video_360_plugin.dart';
 ```
 
-play video:
+Add Video360View:
 ``` dart
-Video360.playVideo("360_VIDEO_URL_HERE");
+Video360View(
+    onVideo360ViewCreated: _onVideo360ViewCreated,
+    url: YOUR_360_VIDEO_URL,
+    isAutoPlay: true,   // defalut : true
+    isRepeat: true, // defalut : true
+    onPlayInfo: (Video360PlayInfo info) {
+        // Play info Callback      
+    },
+)
 ```
+
+Video360Controller Method
+> play() : video play<br>
+> stop() : video stop<br>
+> reset() : video reset<br>
+> jumpTo() : video jump, parameter is milesecond<br>
+> seekTo() : video seek, parameter is plus, minus milesecond
 
 sample code:
 ``` dart
 import 'package:flutter/material.dart';
-
-import 'package:video_360/video_360.dart';
+import 'package:video_360/video_360_plugin.dart';
 
 void main() {
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MaterialApp(home: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -62,6 +73,11 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
+  late Video360Controller controller;
+  
+  String durationText = '';
+  String totalText = '';
+
   @override
   void initState() {
     super.initState();
@@ -69,23 +85,105 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Video 360 example app'),
-        ),
-        body: Center(
-          child: MaterialButton(
-             onPressed: () =>
-                Video360.playVideo(
-                  'your video url'
-                ),
-             color: Colors.grey[100],
-             child: Text('Play Video'),
-           ),
-         ),
+
+    var statusBar = MediaQuery.of(context).padding.top;
+
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Video 360 Plugin example app'),
+      ),
+      body: Stack(
+        children: [
+          Center(
+            child: Container(
+              width: width,
+              height: height,
+              child: Video360View(
+                onVideo360ViewCreated: _onVideo360ViewCreated,
+                url: 'https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8',
+                onPlayInfo: (Video360PlayInfo info) {
+                  setState(() {
+                    durationText = info.duration.toString();
+                    totalText = info.total.toString();
+                  });
+                },
+              ),
+            ),
+          ),
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  MaterialButton(
+                    onPressed: () {
+                      controller.play();
+                    },
+                    color: Colors.grey[100],
+                    child: Text('Play'),
+                  ),
+                  MaterialButton(
+                    onPressed: () {
+                      controller.stop();
+                    },
+                    color: Colors.grey[100],
+                    child: Text('Stop'),
+                  ),
+                  MaterialButton(
+                    onPressed: () {
+                      controller.reset();
+                    },
+                    color: Colors.grey[100],
+                    child: Text('Reset'),
+                  ),
+                  MaterialButton(
+                    onPressed: () {
+                      controller.jumpTo(80000);
+                    },
+                    color: Colors.grey[100],
+                    child: Text('1:20'),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  MaterialButton(
+                    onPressed: () {
+                      controller.seekTo(-2000);
+                    },
+                    color: Colors.grey[100],
+                    child: Text('<<'),
+                  ),
+                  MaterialButton(
+                    onPressed: () {
+                      controller.seekTo(2000);
+                    },
+                    color: Colors.grey[100],
+                    child: Text('>>'),
+                  ),
+                  Flexible(
+                    child: MaterialButton(
+                      onPressed: () {
+                      },
+                      color: Colors.grey[100],
+                      child: Text(durationText + ' / ' + totalText),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          )
+        ],
       ),
     );
+  }
+
+  _onVideo360ViewCreated(Video360Controller controller) {
+    this.controller = controller;
   }
 }
 ```

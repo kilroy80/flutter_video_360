@@ -1,6 +1,6 @@
 name: video_360
 description: simple video 360 player
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/kilroy80/flutter_video_360
 
 environment:
