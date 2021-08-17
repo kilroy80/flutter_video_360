@@ -33,7 +33,7 @@ iOS Requirements
 
 importing the libray:
 ``` dart
-import 'package:video_360/video_360_plugin.dart';
+import 'package:video_360/video_360.dart';
 ```
 
 Add Video360View:
@@ -59,7 +59,7 @@ Video360Controller Method
 sample code:
 ``` dart
 import 'package:flutter/material.dart';
-import 'package:video_360/video_360_plugin.dart';
+import 'package:video_360/video_360.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
