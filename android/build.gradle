@@ -50,7 +50,7 @@ dependencies {
 
     implementation 'com.android.support:multidex:1.0.3'
 
-    implementation 'com.google.android.exoplayer:exoplayer:2.12.1'
-    implementation 'com.google.android.exoplayer:extension-rtmp:2.12.1'
-    implementation 'com.google.android.exoplayer:extension-mediasession:2.12.1'
+    implementation 'com.google.android.exoplayer:exoplayer:2.14.1'
+    implementation 'com.google.android.exoplayer:extension-rtmp:2.14.1'
+    implementation 'com.google.android.exoplayer:extension-mediasession:2.14.1'
 }
