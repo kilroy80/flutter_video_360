@@ -7,7 +7,7 @@ Simple 360 video player plugin
 
 The Android uses the open source [Google ExoPlayer](https://github.com/google/ExoPlayer)
 
-> Google ExoPlayer Version: 2.14.1
+> Google ExoPlayer Version: 2.16.1
 
 The iOS users the open source [Swifty360Player](https://github.com/abdullahselek/Swifty360Player)
 
