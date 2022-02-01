@@ -9,26 +9,26 @@ import android.os.Bundle
 import android.view.WindowManager
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.source.smoothstreaming.DefaultSsChunkSource
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource
 import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.ui.spherical.SphericalGLSurfaceView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.exoplayer2.upstream.DefaultDataSource
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.util.Util
+import com.google.android.exoplayer2.video.spherical.SphericalGLSurfaceView
 
-class VRActivity : Activity(), Player.EventListener {
+class VRActivity : Activity(), Player.Listener {
 
     private lateinit var vrPlayer: PlayerView
-    private var player: SimpleExoPlayer? = null
+    private var player: ExoPlayer? = null
     private var videoUrl = ""
 
     private lateinit var bandwidthMeter: DefaultBandwidthMeter
@@ -48,7 +48,7 @@ class VRActivity : Activity(), Player.EventListener {
                 .setDefaultStereoMode(C.STEREO_MODE_STEREO_MESH)
 
         bandwidthMeter = DefaultBandwidthMeter.Builder(this)
-            .build()
+                .build()
     }
 
     override fun onStart() {
@@ -80,12 +80,11 @@ class VRActivity : Activity(), Player.EventListener {
     }
 
     private fun buildDataSourceFactory(context: Context, cookieValue: String): DataSource.Factory {
-        val defaultHttpFactory = DefaultHttpDataSourceFactory(
-                Util.getUserAgent(context, "kino_video_360"), bandwidthMeter
-        )
-        defaultHttpFactory.defaultRequestProperties.set("Cookie", cookieValue)
-
-        return DefaultDataSourceFactory(context, bandwidthMeter, defaultHttpFactory)
+        val defaultHttpFactory = DefaultHttpDataSource.Factory()
+        defaultHttpFactory.setUserAgent(Util.getUserAgent(context, "kino_video_360"))
+        defaultHttpFactory.setDefaultRequestProperties(mapOf("Cookie" to cookieValue))
+        defaultHttpFactory.setTransferListener(bandwidthMeter)
+        return DefaultDataSource.Factory(context,defaultHttpFactory)
     }
 
     private fun buildMediaSource(url: String, dataFactory: DataSource.Factory): MediaSource? {
@@ -105,7 +104,7 @@ class VRActivity : Activity(), Player.EventListener {
                 return HlsMediaSource.Factory(dataFactory).createMediaSource(uri)
             }
             C.TYPE_OTHER -> {
-                return ExtractorMediaSource.Factory(dataFactory).createMediaSource(uri)
+                return ProgressiveMediaSource.Factory(dataFactory).createMediaSource(uri)
             }
             else -> {
                 return null
@@ -114,13 +113,13 @@ class VRActivity : Activity(), Player.EventListener {
     }
 
     private fun initializePlayer() {
-        player = SimpleExoPlayer.Builder(this).build()
+        player = ExoPlayer.Builder(this).build()
 
         val uri = Uri.parse(videoUrl)
         val mediaSource = buildMediaSource(videoUrl, buildDataSourceFactory(this, ""))
 
         mediaSource?.let {
-            player?.prepare(it)
+            player?.setMediaSource(it)
             player?.addListener(this)
             player?.playWhenReady = true
 

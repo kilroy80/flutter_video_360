@@ -1,55 +1,60 @@
 # video_360
 
-Simple 360 video player plugin 
+Simple 360 video player plugin
 (Android, iOS support)
 
 ## Getting Started
 
 The Android uses the open source [Google ExoPlayer](https://github.com/google/ExoPlayer)
 
->Google ExoPlayer Version: 2.12.1
+> Google ExoPlayer Version: 2.16.1
 
 The iOS users the open source [Swifty360Player](https://github.com/abdullahselek/Swifty360Player)
 
->Swifty360Player Version: 0.2.5
+> Swifty360Player Version: 0.2.5
 
 ## Installation
 
 Add pubspec.yaml dependencies.
 
-``` dart
+```dart
 dependencies:
   video_360: ^0.0.3
 ```
 
 Android Requirements
->Minimum SDK Target : 16
+
+> Minimum SDK Target : 16
 
 iOS Requirements
->Minimum iOS Target : 11.0<br>
->Swift Version : 5.x
+
+> Minimum iOS Target : 11.0<br>
+> Swift Version : 5.x
 
 ## How to use
 
 importing the libray:
-``` dart
+
+```dart
 import 'package:video_360/video_360.dart';
 ```
 
 Add Video360View:
-``` dart
+
+```dart
 Video360View(
     onVideo360ViewCreated: _onVideo360ViewCreated,
     url: YOUR_360_VIDEO_URL,
     isAutoPlay: true,   // defalut : true
     isRepeat: true, // defalut : true
     onPlayInfo: (Video360PlayInfo info) {
-        // Play info Callback      
+        // Play info Callback
     },
 )
 ```
 
 Video360Controller Method
+
 > play() : video play<br>
 > stop() : video stop<br>
 > reset() : video reset<br>
@@ -57,7 +62,8 @@ Video360Controller Method
 > seekTo() : video seek, parameter is plus, minus milesecond
 
 sample code:
-``` dart
+
+```dart
 import 'package:flutter/material.dart';
 import 'package:video_360/video_360.dart';
 
@@ -74,7 +80,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 
   late Video360Controller controller;
-  
+
   String durationText = '';
   String totalText = '';
 
