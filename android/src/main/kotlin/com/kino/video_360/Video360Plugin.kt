@@ -1,8 +1,7 @@
 package com.kino.video_360
 
 import android.app.Activity
-import android.content.Context;
-import android.content.Intent;
+import android.content.Context
 import android.util.Log
 import androidx.annotation.NonNull
 
@@ -13,7 +12,6 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-import io.flutter.plugin.common.PluginRegistry
 
 /** Video360Plugin */
 class Video360Plugin: FlutterPlugin, MethodCallHandler, ActivityAware {
@@ -25,17 +23,17 @@ class Video360Plugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     private lateinit var context: Context
     private lateinit var activity: Activity
 
-    companion object {
-    @JvmStatic
-    fun registerWith(registrar: PluginRegistry.Registrar) {
-              registrar.platformViewRegistry()
-                      .registerViewFactory(
-                          "kino_video_360", Video360ViewFactory(
-                              registrar.activity(), registrar.messenger()
-                          )
-                      )
-        }
-    }
+//    companion object {
+//        @JvmStatic
+//        fun registerWith(registrar: PluginRegistry.Registrar) {
+//                  registrar.platformViewRegistry()
+//                          .registerViewFactory(
+//                              "kino_video_360", Video360ViewFactory(
+//                                  registrar.activity(), registrar.messenger()
+//                          )
+//                  )
+//        }
+//    }
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     //    channel = MethodChannel(flutterPluginBinding.binaryMessenger, "kino_video_360")
@@ -44,6 +42,9 @@ class Video360Plugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
         Log.i(TAG, "onAttachedToEngine")
         this.flutterPluginBinding = flutterPluginBinding
+
+        flutterPluginBinding.platformViewRegistry.registerViewFactory("kino_video_360",
+            Video360ViewFactory(flutterPluginBinding.binaryMessenger))
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
@@ -71,10 +72,10 @@ class Video360Plugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         Log.i(TAG, "onAttachedToActivity")
         activity = binding.activity
 
-        flutterPluginBinding?.let {
-          it.platformViewRegistry.registerViewFactory("kino_video_360",
-                  Video360ViewFactory(binding.activity, it.binaryMessenger))
-        }
+//        flutterPluginBinding?.let {
+//          it.platformViewRegistry.registerViewFactory("kino_video_360",
+//                  Video360ViewFactory(binding.activity, it.binaryMessenger))
+//        }
     }
 
     override fun onDetachedFromActivityForConfigChanges() {

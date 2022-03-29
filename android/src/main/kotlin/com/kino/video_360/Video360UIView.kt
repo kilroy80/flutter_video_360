@@ -9,6 +9,7 @@ import android.widget.FrameLayout
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.dash.DashMediaSource
@@ -78,22 +79,23 @@ class Video360UIView : FrameLayout, Player.Listener {
 
     private fun buildMediaSource(url: String, dataFactory: DataSource.Factory): MediaSource? {
         val uri = Uri.parse(url)
+        val mediaItem = MediaItem.fromUri(uri)
         when (Util.inferContentType(url)) {
             C.TYPE_DASH -> {
                 val dashChunkSourceFactory = DefaultDashChunkSource.Factory(dataFactory)
                 return DashMediaSource.Factory(dashChunkSourceFactory, null)
-                        .createMediaSource(uri)
+                        .createMediaSource(mediaItem)
             }
             C.TYPE_SS -> {
                 val ssChunkSourceFactory = DefaultSsChunkSource.Factory(dataFactory)
                 return SsMediaSource.Factory(ssChunkSourceFactory, null)
-                        .createMediaSource(uri)
+                        .createMediaSource(mediaItem)
             }
             C.TYPE_HLS -> {
-                return HlsMediaSource.Factory(dataFactory).createMediaSource(uri)
+                return HlsMediaSource.Factory(dataFactory).createMediaSource(mediaItem)
             }
             C.TYPE_OTHER -> {
-                return ProgressiveMediaSource.Factory(dataFactory).createMediaSource(uri)
+                return ProgressiveMediaSource.Factory(dataFactory).createMediaSource(mediaItem)
             }
             else -> {
                 return null

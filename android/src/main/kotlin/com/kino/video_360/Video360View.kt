@@ -17,7 +17,7 @@ import io.flutter.plugin.platform.PlatformView
 import java.util.*
 import kotlin.collections.HashMap
 
-class Video360View(private val activity: Activity, context: Context, messenger: BinaryMessenger, id: Int)
+class Video360View(context: Context, messenger: BinaryMessenger, id: Int)
     : PlatformView, MethodChannel.MethodCallHandler {
 
     private val TAG: String = Video360View::class.java.simpleName
@@ -138,7 +138,7 @@ class Video360View(private val activity: Activity, context: Context, messenger: 
             }
         }
 
-        activity.application.registerActivityLifecycleCallbacks(this.activityLifecycleCallbacks)
+        (context as Activity).application.registerActivityLifecycleCallbacks(this.activityLifecycleCallbacks)
     }
 
     private fun onStart() {

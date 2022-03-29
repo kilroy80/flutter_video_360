@@ -7,9 +7,9 @@ Simple 360 video player plugin
 
 The Android uses the open source [Google ExoPlayer](https://github.com/google/ExoPlayer)
 
-> Google ExoPlayer Version: 2.16.1
+> Google ExoPlayer Version: 2.17.0
 
-The iOS users the open source [Swifty360Player](https://github.com/abdullahselek/Swifty360Player)
+The iOS uses the open source [Swifty360Player](https://github.com/abdullahselek/Swifty360Player)
 
 > Swifty360Player Version: 0.2.5
 
@@ -58,8 +58,8 @@ Video360Controller Method
 > play() : video play<br>
 > stop() : video stop<br>
 > reset() : video reset<br>
-> jumpTo() : video jump, parameter is milesecond<br>
-> seekTo() : video seek, parameter is plus, minus milesecond
+> jumpTo() : video jump, parameter is millisecond<br>
+> seekTo() : video seek, parameter is plus, minus millisecond
 
 sample code:
 
