@@ -1,12 +1,11 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:video_360/src/video360_play_info.dart';
 
-typedef Video360ControllerCallback = void Function(String method, dynamic arguments);
+typedef Video360ControllerCallback = void Function(
+    String method, dynamic arguments);
 typedef Video360ControllerPlayInfo = void Function(Video360PlayInfo playInfo);
 
 class Video360Controller {
@@ -85,9 +84,7 @@ class Video360Controller {
 
   jumpTo(double millisecond) async {
     try {
-      await _channel.invokeMethod<void>('jumpTo', {
-        'millisecond': millisecond
-      });
+      await _channel.invokeMethod<void>('jumpTo', {'millisecond': millisecond});
     } on PlatformException catch (e) {
       print('${e.code}: ${e.message}');
     }
@@ -95,9 +92,7 @@ class Video360Controller {
 
   seekTo(double millisecond) async {
     try {
-      await _channel.invokeMethod<void>('seekTo', {
-        'millisecond': millisecond
-      });
+      await _channel.invokeMethod<void>('seekTo', {'millisecond': millisecond});
     } on PlatformException catch (e) {
       print('${e.code}: ${e.message}');
     }
@@ -106,11 +101,8 @@ class Video360Controller {
   onPanUpdate(bool isStart, double x, double y) async {
     if (Platform.isIOS) {
       try {
-        await _channel.invokeMethod<void>('onPanUpdate', {
-          'isStart': isStart,
-          'x': x,
-          'y': y
-        });
+        await _channel.invokeMethod<void>(
+            'onPanUpdate', {'isStart': isStart, 'x': x, 'y': y});
       } on PlatformException catch (e) {
         print('${e.code}: ${e.message}');
       }
@@ -155,11 +147,13 @@ class Video360Controller {
         playInfoStream = null;
       }
 
-      playInfoStream = Stream.periodic(Duration(milliseconds: 100), (x) => x).listen((event) async {
+      playInfoStream = Stream.periodic(Duration(milliseconds: 100), (x) => x)
+          .listen((event) async {
         var duration = await getCurrentPosition();
         var total = await getDuration();
         var isPlaying = await getPlaying();
-        onPlayInfo?.call(Video360PlayInfo(duration: duration, total: total, isPlaying: isPlaying));
+        onPlayInfo?.call(Video360PlayInfo(
+            duration: duration, total: total, isPlaying: isPlaying));
       });
     }
   }
@@ -172,7 +166,8 @@ class Video360Controller {
         var duration = call.arguments['duration'];
         var total = call.arguments['total'];
         var isPlaing = call.arguments['isPlaying'];
-        onPlayInfo?.call(Video360PlayInfo(duration: duration, total: total, isPlaying: isPlaing));
+        onPlayInfo?.call(Video360PlayInfo(
+            duration: duration, total: total, isPlaying: isPlaing));
         break;
       default:
         print('Unknowm method ${call.method} ');

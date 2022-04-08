@@ -12,7 +12,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   late Video360Controller controller;
 
   String durationText = '';
@@ -25,9 +24,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-
-    var statusBar = MediaQuery.of(context).padding.top;
-
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
 
@@ -43,7 +39,8 @@ class _MyAppState extends State<MyApp> {
               height: height,
               child: Video360View(
                 onVideo360ViewCreated: _onVideo360ViewCreated,
-                url: 'https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8',
+                url:
+                    'https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8',
                 onPlayInfo: (Video360PlayInfo info) {
                   setState(() {
                     durationText = info.duration.toString();
@@ -107,8 +104,7 @@ class _MyAppState extends State<MyApp> {
                   ),
                   Flexible(
                     child: MaterialButton(
-                      onPressed: () {
-                      },
+                      onPressed: () {},
                       color: Colors.grey[100],
                       child: Text(durationText + ' / ' + totalText),
                     ),
