@@ -7,7 +7,7 @@ Simple 360 video player plugin
 
 The Android uses the open source [Google ExoPlayer](https://github.com/google/ExoPlayer)
 
-> Google ExoPlayer Version: 2.16.1
+> Google ExoPlayer Version: 2.17.1
 
 The iOS users the open source [Swifty360Player](https://github.com/abdullahselek/Swifty360Player)
 
@@ -19,16 +19,16 @@ Add pubspec.yaml dependencies.
 
 ```dart
 dependencies:
-  video_360: ^0.0.3
+  video_360: ^0.0.4
 ```
 
 Android Requirements
 
-> Minimum SDK Target : 16
+> Minimum SDK Target : 24
 
 iOS Requirements
 
-> Minimum iOS Target : 11.0<br>
+> Minimum iOS Target : 11.0
 > Swift Version : 5.x
 
 ## How to use
@@ -55,10 +55,10 @@ Video360View(
 
 Video360Controller Method
 
-> play() : video play<br>
-> stop() : video stop<br>
-> reset() : video reset<br>
-> jumpTo() : video jump, parameter is milesecond<br>
+> play() : video play
+> stop() : video stop
+> reset() : video reset
+> jumpTo() : video jump, parameter is milesecond
 > seekTo() : video seek, parameter is plus, minus milesecond
 
 sample code:
@@ -69,16 +69,17 @@ import 'package:video_360/video_360.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MaterialApp(home: MyApp()));
+  runApp(const MaterialApp(home: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-
   late Video360Controller controller;
 
   String durationText = '';
@@ -91,9 +92,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-
-    var statusBar = MediaQuery.of(context).padding.top;
-
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
 
@@ -104,12 +102,13 @@ class _MyAppState extends State<MyApp> {
       body: Stack(
         children: [
           Center(
-            child: Container(
+            child: SizedBox(
               width: width,
               height: height,
               child: Video360View(
                 onVideo360ViewCreated: _onVideo360ViewCreated,
-                url: 'https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8',
+                url:
+                    'https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8',
                 onPlayInfo: (Video360PlayInfo info) {
                   setState(() {
                     durationText = info.duration.toString();
@@ -129,28 +128,28 @@ class _MyAppState extends State<MyApp> {
                       controller.play();
                     },
                     color: Colors.grey[100],
-                    child: Text('Play'),
+                    child: const Text('Play'),
                   ),
                   MaterialButton(
                     onPressed: () {
                       controller.stop();
                     },
                     color: Colors.grey[100],
-                    child: Text('Stop'),
+                    child: const Text('Stop'),
                   ),
                   MaterialButton(
                     onPressed: () {
                       controller.reset();
                     },
                     color: Colors.grey[100],
-                    child: Text('Reset'),
+                    child: const Text('Reset'),
                   ),
                   MaterialButton(
                     onPressed: () {
                       controller.jumpTo(80000);
                     },
                     color: Colors.grey[100],
-                    child: Text('1:20'),
+                    child: const Text('1:20'),
                   ),
                 ],
               ),
@@ -162,19 +161,18 @@ class _MyAppState extends State<MyApp> {
                       controller.seekTo(-2000);
                     },
                     color: Colors.grey[100],
-                    child: Text('<<'),
+                    child: const Text('<<'),
                   ),
                   MaterialButton(
                     onPressed: () {
                       controller.seekTo(2000);
                     },
                     color: Colors.grey[100],
-                    child: Text('>>'),
+                    child: const Text('>>'),
                   ),
                   Flexible(
                     child: MaterialButton(
-                      onPressed: () {
-                      },
+                      onPressed: () {},
                       color: Colors.grey[100],
                       child: Text(durationText + ' / ' + totalText),
                     ),
