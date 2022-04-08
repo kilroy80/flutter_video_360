@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import com.google.android.exoplayer2.C
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.source.MediaSource
@@ -93,18 +94,18 @@ class VRActivity : Activity(), Player.Listener {
             C.TYPE_DASH -> {
                 val dashChunkSourceFactory = DefaultDashChunkSource.Factory(dataFactory)
                 return DashMediaSource.Factory(dashChunkSourceFactory, null)
-                        .createMediaSource(uri)
+                        .createMediaSource(MediaItem.fromUri(uri))
             }
             C.TYPE_SS -> {
                 val ssChunkSourceFactory = DefaultSsChunkSource.Factory(dataFactory)
                 return SsMediaSource.Factory(ssChunkSourceFactory, null)
-                        .createMediaSource(uri)
+                        .createMediaSource(MediaItem.fromUri(uri))
             }
             C.TYPE_HLS -> {
-                return HlsMediaSource.Factory(dataFactory).createMediaSource(uri)
+                return HlsMediaSource.Factory(dataFactory).createMediaSource(MediaItem.fromUri(uri))
             }
             C.TYPE_OTHER -> {
-                return ProgressiveMediaSource.Factory(dataFactory).createMediaSource(uri)
+                return ProgressiveMediaSource.Factory(dataFactory).createMediaSource(MediaItem.fromUri(uri))
             }
             else -> {
                 return null

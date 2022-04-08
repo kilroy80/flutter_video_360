@@ -13,8 +13,8 @@ class Video360ViewFactory(private val activity: Activity, private val messenger:
 
     override fun create(context: Context, id: Int, args: Any?): PlatformView {
         val params = args as HashMap<*, *>
-        Log.i("Video360ViewFactory", id.toString())
-        Log.i("Video360ViewFactory", args.toString())
+        //Log.i("Video360ViewFactory", id.toString())
+        //Log.i("Video360ViewFactory", args.toString())
         return Video360View(activity, context, messenger, id)
     }
 }

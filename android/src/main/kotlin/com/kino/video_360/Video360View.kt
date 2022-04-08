@@ -54,15 +54,15 @@ class Video360View(private val activity: Activity, context: Context, messenger: 
                 }
             }
             "resume" -> {
-                Log.i(TAG, "resume")
+                //Log.i(TAG, "resume")
                 onResume()
             }
             "pause" -> {
-                Log.i(TAG, "pause")
+                //Log.i(TAG, "pause")
                 onPause()
             }
             "dispose" -> {
-                Log.i(TAG, "dispose")
+                //Log.i(TAG, "dispose")
                 dispose()
             }
             "play" -> {
@@ -106,26 +106,26 @@ class Video360View(private val activity: Activity, context: Context, messenger: 
     private fun setupLifeCycle(context: Context) {
         activityLifecycleCallbacks = object : Application.ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                Log.i(TAG, "onActivityCreated")
+                //Log.i(TAG, "onActivityCreated")
             }
 
             override fun onActivityStarted(activity: Activity) {
-                Log.i(TAG, "onActivityStarted")
+                //Log.i(TAG, "onActivityStarted")
                 onStart()
             }
 
             override fun onActivityResumed(activity: Activity) {
-                Log.i(TAG, "onActivityResumed")
+                //Log.i(TAG, "onActivityResumed")
                 onResume()
             }
 
             override fun onActivityPaused(activity: Activity) {
-                Log.i(TAG, "onActivityPaused")
+                //Log.i(TAG, "onActivityPaused")
                 onPause()
             }
 
             override fun onActivityStopped(activity: Activity) {
-                Log.i(TAG, "onActivityStopped")
+                //Log.i(TAG, "onActivityStopped")
                 onStop()
             }
 
@@ -133,7 +133,7 @@ class Video360View(private val activity: Activity, context: Context, messenger: 
             }
 
             override fun onActivityDestroyed(activity: Activity) {
-                Log.i(TAG, "onActivityDestroyed")
+                //Log.i(TAG, "onActivityDestroyed")
                 onDestroy()
             }
         }

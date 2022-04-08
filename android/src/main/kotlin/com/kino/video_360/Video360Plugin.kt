@@ -42,7 +42,7 @@ class Video360Plugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     //    channel.setMethodCallHandler(this)
     //    context = flutterPluginBinding.applicationContext
 
-        Log.i(TAG, "onAttachedToEngine")
+        //Log.i(TAG, "onAttachedToEngine")
         this.flutterPluginBinding = flutterPluginBinding
     }
 
@@ -63,12 +63,12 @@ class Video360Plugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
     //    channel.setMethodCallHandler(null)
-        Log.i(TAG, "onDetachedFromEngine")
+        //Log.i(TAG, "onDetachedFromEngine")
         this.flutterPluginBinding = null
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-        Log.i(TAG, "onAttachedToActivity")
+        //Log.i(TAG, "onAttachedToActivity")
         activity = binding.activity
 
         flutterPluginBinding?.let {
@@ -78,16 +78,16 @@ class Video360Plugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
-        Log.i(TAG, "onDetachedFromActivityForConfigChanges")
+        //Log.i(TAG, "onDetachedFromActivityForConfigChanges")
         onDetachedFromActivity()
     }
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-        Log.i(TAG, "onReattachedToActivityForConfigChanges")
+        //Log.i(TAG, "onReattachedToActivityForConfigChanges")
         onAttachedToActivity(binding)
     }
 
     override fun onDetachedFromActivity() {
-        Log.i(TAG,"onDetachedFromActivity")
+        //Log.i(TAG,"onDetachedFromActivity")
     }
 }
