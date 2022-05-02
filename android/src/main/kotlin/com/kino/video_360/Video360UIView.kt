@@ -17,20 +17,20 @@ import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.source.smoothstreaming.DefaultSsChunkSource
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource
-import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
-import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.util.Util
 import com.google.android.exoplayer2.video.spherical.SphericalGLSurfaceView
+import io.flutter.view.TextureRegistry
 
 class Video360UIView : FrameLayout, Player.Listener {
 
     private val TAG = Video360UIView::class.java.simpleName
 
-    private lateinit var vrPlayer: PlayerView
+    private lateinit var vrPlayer: StyledPlayerView
     private var player: ExoPlayer? = null
     private var videoUrl = ""
     private var isAutoPlay = true
@@ -38,7 +38,10 @@ class Video360UIView : FrameLayout, Player.Listener {
 
     private lateinit var bandwidthMeter: DefaultBandwidthMeter
 
-    constructor(context: Context) : super(context) {
+    private var textureRegistry: TextureRegistry? = null
+
+    constructor(context: Context, textureRegistry: TextureRegistry) : super(context) {
+        this.textureRegistry = textureRegistry
         init()
     }
 
@@ -56,9 +59,10 @@ class Video360UIView : FrameLayout, Player.Listener {
         )
         layoutParams = layout
 
-        inflate(context, R.layout.view_vr, this);
+        inflate(context, R.layout.view_vr, this)
 
         vrPlayer = findViewById(R.id.vr_player)
+
         (vrPlayer.videoSurfaceView as SphericalGLSurfaceView)
                 .setDefaultStereoMode(C.STEREO_MODE_STEREO_MESH)
         vrPlayer.useController = false
@@ -118,7 +122,8 @@ class Video360UIView : FrameLayout, Player.Listener {
 
         val mediaSource = buildMediaSource(videoUrl, buildDataSourceFactory(context, ""))
         mediaSource?.let {
-            player?.prepare(it)
+            player?.setMediaSource(it)
+            player?.prepare()
             player?.addListener(this)
 
             player?.playWhenReady = isAutoPlay

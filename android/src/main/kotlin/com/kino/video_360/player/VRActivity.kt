@@ -1,4 +1,4 @@
-package com.kino.video_360
+package com.kino.video_360.player
 
 import android.app.Activity
 import android.content.Context
@@ -18,17 +18,18 @@ import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.source.smoothstreaming.DefaultSsChunkSource
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource
-import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.util.Util
 import com.google.android.exoplayer2.video.spherical.SphericalGLSurfaceView
+import com.kino.video_360.R
 
 class VRActivity : Activity(), Player.Listener {
 
-    private lateinit var vrPlayer: PlayerView
+    private lateinit var vrPlayer: StyledPlayerView
     private var player: ExoPlayer? = null
     private var videoUrl = ""
 
@@ -42,7 +43,7 @@ class VRActivity : Activity(), Player.Listener {
         window.decorView.setBackgroundColor(Color.BLACK)
 
         val i = intent
-        videoUrl = i.getStringExtra(VRActivity.EXTRA_URL) ?: ""
+        videoUrl = i.getStringExtra(VRActivity.EXTRA_URL) ?: "https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8"
 
         vrPlayer = findViewById(R.id.vr_player)
         (vrPlayer.videoSurfaceView as SphericalGLSurfaceView)
@@ -122,6 +123,7 @@ class VRActivity : Activity(), Player.Listener {
 
         mediaSource?.let {
             player?.setMediaSource(it)
+            player?.prepare()
             player?.addListener(this)
             player?.playWhenReady = true
 

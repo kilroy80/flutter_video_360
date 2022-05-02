@@ -23,28 +23,12 @@ class Video360Plugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     private lateinit var context: Context
     private lateinit var activity: Activity
 
-//    companion object {
-//        @JvmStatic
-//        fun registerWith(registrar: PluginRegistry.Registrar) {
-//                  registrar.platformViewRegistry()
-//                          .registerViewFactory(
-//                              "kino_video_360", Video360ViewFactory(
-//                                  registrar.activity(), registrar.messenger()
-//                          )
-//                  )
-//        }
-//    }
-
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    //    channel = MethodChannel(flutterPluginBinding.binaryMessenger, "kino_video_360")
-    //    channel.setMethodCallHandler(this)
-    //    context = flutterPluginBinding.applicationContext
-
         Log.i(TAG, "onAttachedToEngine")
         this.flutterPluginBinding = flutterPluginBinding
 
         flutterPluginBinding.platformViewRegistry.registerViewFactory("kino_video_360",
-            Video360ViewFactory(flutterPluginBinding.binaryMessenger))
+            Video360ViewFactory(flutterPluginBinding.binaryMessenger, flutterPluginBinding.textureRegistry))
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
@@ -71,11 +55,6 @@ class Video360Plugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         Log.i(TAG, "onAttachedToActivity")
         activity = binding.activity
-
-//        flutterPluginBinding?.let {
-//          it.platformViewRegistry.registerViewFactory("kino_video_360",
-//                  Video360ViewFactory(binding.activity, it.binaryMessenger))
-//        }
     }
 
     override fun onDetachedFromActivityForConfigChanges() {

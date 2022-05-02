@@ -5,7 +5,7 @@
 
     <application>
         <activity
-            android:name="VRActivity"
+            android:name=".player.VRActivity"
             android:launchMode="singleTask"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|layoutDirection"
             android:imeOptions="flagNoExtractUi|flagNoFullscreen"

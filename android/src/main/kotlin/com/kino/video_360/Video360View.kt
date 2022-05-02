@@ -3,6 +3,7 @@ package com.kino.video_360
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -14,10 +15,11 @@ import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.platform.PlatformView
+import io.flutter.view.TextureRegistry
 import java.util.*
 import kotlin.collections.HashMap
 
-class Video360View(context: Context, messenger: BinaryMessenger, id: Int)
+class Video360View(context: Context, messenger: BinaryMessenger, id: Int, textureRegistry: TextureRegistry)
     : PlatformView, MethodChannel.MethodCallHandler {
 
     private val TAG: String = Video360View::class.java.simpleName
@@ -29,7 +31,7 @@ class Video360View(context: Context, messenger: BinaryMessenger, id: Int)
 
     init {
         methodChannel.setMethodCallHandler(this)
-        videoView = Video360UIView(context)
+        videoView = Video360UIView(context, textureRegistry)
 
         val layout = ViewGroup.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
@@ -49,6 +51,7 @@ class Video360View(context: Context, messenger: BinaryMessenger, id: Int)
                     isAutoPlay?.let { autoPlay ->
                         isRepeat?.let { repeat ->
                             videoView.initializePlayer(vUrl, autoPlay, repeat)
+//                            videoView.context.startActivity(Intent(videoView.context, VRActivity::class.java))
                         }
                     }
                 }
@@ -138,7 +141,7 @@ class Video360View(context: Context, messenger: BinaryMessenger, id: Int)
             }
         }
 
-        (context as Activity).application.registerActivityLifecycleCallbacks(this.activityLifecycleCallbacks)
+        (context.applicationContext as Application).registerActivityLifecycleCallbacks(this.activityLifecycleCallbacks)
     }
 
     private fun onStart() {
