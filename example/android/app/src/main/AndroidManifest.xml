@@ -35,7 +35,7 @@
         </activity>
 
        <activity
-           android:name="com.kino.video_360.VRActivity"
+           android:name="com.kino.video_360.player.VRActivity"
            android:theme="@style/NormalTheme"
            android:launchMode="singleTask"
            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|layoutDirection"

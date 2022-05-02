@@ -3,11 +3,16 @@
 Simple 360 video player plugin
 (Android, iOS support)
 
+# Notice
+
+Currently only works in Stable branches. (Test on Flutter 2.10.5)  
+I will correct the problem after updating the Flutter Marjor version.
+
 ## Getting Started
 
 The Android uses the open source [Google ExoPlayer](https://github.com/google/ExoPlayer)
 
-> Google ExoPlayer Version: 2.17.0
+> Google ExoPlayer Version: 2.17.1
 
 The iOS uses the open source [Swifty360Player](https://github.com/abdullahselek/Swifty360Player)
 
@@ -19,7 +24,7 @@ Add pubspec.yaml dependencies.
 
 ```dart
 dependencies:
-  video_360: ^0.0.3
+  video_360: ^0.0.4
 ```
 
 Android Requirements
