@@ -135,6 +135,7 @@ class Video360UIView : FrameLayout, Player.Listener {
 
             vrPlayer.player = player
         }
+        vrPlayer.onResume()
     }
 
     fun releasePlayer() {
