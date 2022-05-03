@@ -1,3 +1,7 @@
+## 0.0.5
+
+* Fix : Fixed an Android Gyroscope Bug
+
 ## 0.0.4
 
 * Feat : Upgrade Android Base Version 31
