@@ -172,12 +172,14 @@ class Video360UIView : FrameLayout, Player.Listener {
 
     fun onStop() {
         if (Build.VERSION.SDK_INT > 23) {
+            vrPlayer.onPause()
             releasePlayer()
         }
     }
 
     fun onPause() {
         if (Build.VERSION.SDK_INT <= 23) {
+            vrPlayer.onPause()
             releasePlayer()
         }
     }
