@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:video_360/src/video360_play_info.dart';
 

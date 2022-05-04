@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
               height: height,
               child: Video360View(
                 onVideo360ViewCreated: _onVideo360ViewCreated,
-                url: 'https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8',
+                url: 'https://bitmovin-a.akamaihd.net/content/playhouse-vr/m3u8s/105560.m3u8',
                 onPlayInfo: (Video360PlayInfo info) {
                   setState(() {
                     durationText = info.duration.toString();
