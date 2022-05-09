@@ -1,3 +1,7 @@
+## 0.0.6
+
+* Fix : Fixed an Android Memory Leak
+
 ## 0.0.5
 
 * Fix : Fixed an Android Gyroscope Bug
