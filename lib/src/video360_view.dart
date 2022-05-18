@@ -1,7 +1,10 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:video_360/src/video360_android_view.dart';
 import 'package:video_360/src/video360_controller.dart';
 import 'package:video_360/src/video360_ios_view.dart';
@@ -46,9 +49,44 @@ class _Video360ViewState extends State<Video360View> with WidgetsBindingObserver
   Widget build(BuildContext context) {
     if (defaultTargetPlatform == TargetPlatform.android) {
       return Container(
-        child: Video360AndroidView(
+        // child: Video360AndroidView(
+        //   viewType: 'kino_video_360',
+        //   onPlatformViewCreated: _onPlatformViewCreated,
+        // ),
+        child: PlatformViewLink(
           viewType: 'kino_video_360',
-          onPlatformViewCreated: _onPlatformViewCreated,
+          surfaceFactory: (
+              BuildContext context,
+              PlatformViewController controller,
+              ) {
+            return AndroidViewSurface(
+              controller: controller as AndroidViewController,
+              gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
+              hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+            );
+          },
+          onCreatePlatformView: (PlatformViewCreationParams params) {
+            final ExpensiveAndroidViewController controller =
+                PlatformViewsService.initExpensiveAndroidView(
+                  id: params.id,
+                  viewType: 'kino_video_360',
+                  layoutDirection: TextDirection.ltr,
+                  // creationParams: creationParams,
+                  creationParams: <String, dynamic>{
+                  },
+                  creationParamsCodec: const StandardMessageCodec(),
+                  onFocus: () => params.onFocusChanged(true),
+              );
+              controller.addOnPlatformViewCreatedListener(
+              params.onPlatformViewCreated,
+            );
+            controller.addOnPlatformViewCreatedListener(
+              _onPlatformViewCreated,
+            );
+
+            controller.create();
+            return controller;
+          },
         ),
       );
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
