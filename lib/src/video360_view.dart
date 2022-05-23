@@ -1,11 +1,8 @@
-import 'dart:ui';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:video_360/src/video360_android_view.dart';
 import 'package:video_360/src/video360_controller.dart';
 import 'package:video_360/src/video360_ios_view.dart';
 
@@ -41,7 +38,7 @@ class _Video360ViewState extends State<Video360View> with WidgetsBindingObserver
 
   @override
   void initState() {
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 
@@ -111,7 +108,7 @@ class _Video360ViewState extends State<Video360View> with WidgetsBindingObserver
       return;
     }
 
-    var pixelRatio = window.devicePixelRatio;
+    // var pixelRatio = window.devicePixelRatio;
     RenderBox? box = context.findRenderObject() as RenderBox?;
 
     var width = box?.size.width ?? 0.0;
@@ -133,7 +130,7 @@ class _Video360ViewState extends State<Video360View> with WidgetsBindingObserver
 
   @override
   void dispose() {
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 }

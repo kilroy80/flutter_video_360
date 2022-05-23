@@ -5,8 +5,8 @@ Simple 360 video player plugin
 
 # Notice
 
-Currently only works in Stable branches. (Test on Flutter 2.10.5)  
-I will correct the problem after updating the Flutter Marjor version.
+Flutter Version <= 2.10.5 used this plugin version 0.0.6<br>
+Flutter Version >= 3.0.0 used this plugin version 0.0.7 
 
 ## Getting Started
 
@@ -24,7 +24,7 @@ Add pubspec.yaml dependencies.
 
 ```dart
 dependencies:
-  video_360: ^0.0.6
+  video_360: ^0.0.7
 ```
 
 Android Requirements
