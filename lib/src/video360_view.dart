@@ -48,46 +48,41 @@ class _Video360ViewState extends State<Video360View> with WidgetsBindingObserver
   @override
   Widget build(BuildContext context) {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return Container(
-        // child: Video360AndroidView(
-        //   viewType: 'kino_video_360',
-        //   onPlatformViewCreated: _onPlatformViewCreated,
-        // ),
-        child: PlatformViewLink(
-          viewType: 'kino_video_360',
-          surfaceFactory: (
-              BuildContext context,
-              PlatformViewController controller,
-              ) {
-            return AndroidViewSurface(
-              controller: controller as AndroidViewController,
-              gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
-              hitTestBehavior: PlatformViewHitTestBehavior.opaque,
-            );
-          },
-          onCreatePlatformView: (PlatformViewCreationParams params) {
-            final ExpensiveAndroidViewController controller =
-                PlatformViewsService.initExpensiveAndroidView(
-                  id: params.id,
-                  viewType: 'kino_video_360',
-                  layoutDirection: TextDirection.ltr,
-                  // creationParams: creationParams,
-                  creationParams: <String, dynamic>{
-                  },
-                  creationParamsCodec: const StandardMessageCodec(),
-                  onFocus: () => params.onFocusChanged(true),
-              );
-              controller.addOnPlatformViewCreatedListener(
-              params.onPlatformViewCreated,
-            );
-            controller.addOnPlatformViewCreatedListener(
-              _onPlatformViewCreated,
-            );
+      // return Video360AndroidView(
+      //   viewType: 'kino_video_360',
+      //   onPlatformViewCreated: _onPlatformViewCreated,
+      // );
+      return PlatformViewLink(
+        viewType: 'kino_video_360',
+        surfaceFactory: (
+            BuildContext context,
+            PlatformViewController controller,
+            ) {
+          return AndroidViewSurface(
+            controller: controller as AndroidViewController,
+            gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
+            hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+          );
+        },
+        onCreatePlatformView: (PlatformViewCreationParams params) {
+          final ExpensiveAndroidViewController controller =
+          PlatformViewsService.initExpensiveAndroidView(
+            id: params.id,
+            viewType: 'kino_video_360',
+            layoutDirection: TextDirection.ltr,
+            // creationParams: creationParams,
+            creationParams: <String, dynamic>{
+            },
+            creationParamsCodec: const StandardMessageCodec(),
+            onFocus: () => params.onFocusChanged(true),
+          );
+          controller
+            ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
+            ..addOnPlatformViewCreatedListener(_onPlatformViewCreated)
+            ..create();
 
-            controller.create();
-            return controller;
-          },
-        ),
+          return controller;
+        },
       );
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       return Container(
