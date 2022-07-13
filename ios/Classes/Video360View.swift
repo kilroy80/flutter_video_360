@@ -178,6 +178,8 @@ extension Video360View {
 
     // check player state - for auto play
     private func checkPlayerState() {
+        guard self.timer == nil else { return }
+
         self.timer = Timer(timeInterval: 0.5,
                            target: self,
                            selector: #selector(self.checkReadyToPlay),
