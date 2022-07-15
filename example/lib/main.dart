@@ -13,7 +13,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  late Video360Controller controller;
+  Video360Controller? controller;
 
   String durationText = '';
   String totalText = '';
@@ -60,28 +60,28 @@ class _MyAppState extends State<MyApp> {
                 children: [
                   MaterialButton(
                     onPressed: () {
-                      controller.play();
+                      controller?.play();
                     },
                     color: Colors.grey[100],
                     child: Text('Play'),
                   ),
                   MaterialButton(
                     onPressed: () {
-                      controller.stop();
+                      controller?.stop();
                     },
                     color: Colors.grey[100],
                     child: Text('Stop'),
                   ),
                   MaterialButton(
                     onPressed: () {
-                      controller.reset();
+                      controller?.reset();
                     },
                     color: Colors.grey[100],
                     child: Text('Reset'),
                   ),
                   MaterialButton(
                     onPressed: () {
-                      controller.jumpTo(80000);
+                      controller?.jumpTo(80000);
                     },
                     color: Colors.grey[100],
                     child: Text('1:20'),
@@ -93,14 +93,14 @@ class _MyAppState extends State<MyApp> {
                 children: [
                   MaterialButton(
                     onPressed: () {
-                      controller.seekTo(-2000);
+                      controller?.seekTo(-2000);
                     },
                     color: Colors.grey[100],
                     child: Text('<<'),
                   ),
                   MaterialButton(
                     onPressed: () {
-                      controller.seekTo(2000);
+                      controller?.seekTo(2000);
                     },
                     color: Colors.grey[100],
                     child: Text('>>'),
@@ -122,7 +122,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  _onVideo360ViewCreated(Video360Controller controller) {
+  _onVideo360ViewCreated(Video360Controller? controller) {
     this.controller = controller;
   }
 }

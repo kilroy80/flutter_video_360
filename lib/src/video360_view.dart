@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:video_360/src/video360_controller.dart';
 import 'package:video_360/src/video360_ios_view.dart';
 
-typedef Video360ViewCreatedCallback = void Function(Video360Controller controller);
+typedef Video360ViewCreatedCallback = void Function(Video360Controller? controller);
 typedef PlatformViewCreatedCallback = void Function(int id);
 
 class Video360View extends StatefulWidget {
@@ -29,17 +29,23 @@ class Video360View extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _Video360ViewState createState() => _Video360ViewState();
+  State<Video360View> createState() => _Video360ViewState();
 }
 
 class _Video360ViewState extends State<Video360View> with WidgetsBindingObserver {
 
-  late Video360Controller controller;
+  Video360Controller? controller;
+  bool isPlatformChannel = false;
 
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
+    Future.delayed(Duration(milliseconds: 250), () {
+      setState(() {
+        isPlatformChannel = true;
+      });
+    });
   }
 
   @override
@@ -49,7 +55,7 @@ class _Video360ViewState extends State<Video360View> with WidgetsBindingObserver
       //   viewType: 'kino_video_360',
       //   onPlatformViewCreated: _onPlatformViewCreated,
       // );
-      return PlatformViewLink(
+      return isPlatformChannel == true ? PlatformViewLink(
         viewType: 'kino_video_360',
         surfaceFactory: (
             BuildContext context,
@@ -80,7 +86,7 @@ class _Video360ViewState extends State<Video360View> with WidgetsBindingObserver
 
           return controller;
         },
-      );
+      ): Container();
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       return Container(
         child: GestureDetector(
@@ -89,10 +95,10 @@ class _Video360ViewState extends State<Video360View> with WidgetsBindingObserver
             onPlatformViewCreated: _onPlatformViewCreated,
           ),
           onPanStart: (details) {
-            controller.onPanUpdate(true, details.localPosition.dx, details.localPosition.dy);
+            controller?.onPanUpdate(true, details.localPosition.dx, details.localPosition.dy);
           },
           onPanUpdate: (details) {
-            controller.onPanUpdate(false, details.localPosition.dx, details.localPosition.dy);
+            controller?.onPanUpdate(false, details.localPosition.dx, details.localPosition.dy);
           },
         ),
       );
@@ -124,8 +130,8 @@ class _Video360ViewState extends State<Video360View> with WidgetsBindingObserver
       onCallback: widget.onCallback,
       onPlayInfo: widget.onPlayInfo,
     );
-    controller.updateTime();
-    widget.onVideo360ViewCreated(controller);
+    controller?.updateTime();
+    widget.onVideo360ViewCreated(controller!);
   }
 
   @override
