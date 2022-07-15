@@ -1,3 +1,8 @@
+## 0.0.8
+
+* Fix : Android release build bug
+* Fix : iOS Inner Timer bug
+
 ## 0.0.7
 
 * Feat : Upgrade Flutter support veriosn 3.0.0 

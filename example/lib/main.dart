@@ -12,7 +12,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   Video360Controller? controller;
 
   String durationText = '';
@@ -25,7 +24,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-
     var statusBar = MediaQuery.of(context).padding.top;
 
     var width = MediaQuery.of(context).size.width;
@@ -43,7 +41,8 @@ class _MyAppState extends State<MyApp> {
               height: height,
               child: Video360View(
                 onVideo360ViewCreated: _onVideo360ViewCreated,
-                url: 'https://bitmovin-a.akamaihd.net/content/playhouse-vr/m3u8s/105560.m3u8',
+                url:
+                    'https://bitmovin-a.akamaihd.net/content/playhouse-vr/m3u8s/105560.m3u8',
                 onPlayInfo: (Video360PlayInfo info) {
                   setState(() {
                     durationText = info.duration.toString();
@@ -107,8 +106,7 @@ class _MyAppState extends State<MyApp> {
                   ),
                   Flexible(
                     child: MaterialButton(
-                      onPressed: () {
-                      },
+                      onPressed: () {},
                       color: Colors.grey[100],
                       child: Text(durationText + ' / ' + totalText),
                     ),

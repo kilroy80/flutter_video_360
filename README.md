@@ -6,7 +6,7 @@ Simple 360 video player plugin
 # Notice
 
 Flutter Version <= 2.10.5 used this plugin version 0.0.6<br>
-Flutter Version >= 3.0.0 used this plugin version 0.0.7 
+Flutter Version >= 3.0.0 used this plugin version 0.0.8 
 
 ## Getting Started
 
@@ -24,7 +24,7 @@ Add pubspec.yaml dependencies.
 
 ```dart
 dependencies:
-  video_360: ^0.0.7
+  video_360: ^0.0.8
 ```
 
 Android Requirements
@@ -84,7 +84,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  late Video360Controller controller;
+  Video360Controller? controller;
 
   String durationText = '';
   String totalText = '';
@@ -114,7 +114,7 @@ class _MyAppState extends State<MyApp> {
               height: height,
               child: Video360View(
                 onVideo360ViewCreated: _onVideo360ViewCreated,
-                url: 'https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8',
+                url: 'https://bitmovin-a.akamaihd.net/content/playhouse-vr/m3u8s/105560.m3u8',
                 onPlayInfo: (Video360PlayInfo info) {
                   setState(() {
                     durationText = info.duration.toString();
@@ -131,28 +131,28 @@ class _MyAppState extends State<MyApp> {
                 children: [
                   MaterialButton(
                     onPressed: () {
-                      controller.play();
+                      controller?.play();
                     },
                     color: Colors.grey[100],
                     child: Text('Play'),
                   ),
                   MaterialButton(
                     onPressed: () {
-                      controller.stop();
+                      controller?.stop();
                     },
                     color: Colors.grey[100],
                     child: Text('Stop'),
                   ),
                   MaterialButton(
                     onPressed: () {
-                      controller.reset();
+                      controller?.reset();
                     },
                     color: Colors.grey[100],
                     child: Text('Reset'),
                   ),
                   MaterialButton(
                     onPressed: () {
-                      controller.jumpTo(80000);
+                      controller?.jumpTo(80000);
                     },
                     color: Colors.grey[100],
                     child: Text('1:20'),
@@ -164,14 +164,14 @@ class _MyAppState extends State<MyApp> {
                 children: [
                   MaterialButton(
                     onPressed: () {
-                      controller.seekTo(-2000);
+                      controller?.seekTo(-2000);
                     },
                     color: Colors.grey[100],
                     child: Text('<<'),
                   ),
                   MaterialButton(
                     onPressed: () {
-                      controller.seekTo(2000);
+                      controller?.seekTo(2000);
                     },
                     color: Colors.grey[100],
                     child: Text('>>'),
@@ -193,7 +193,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  _onVideo360ViewCreated(Video360Controller controller) {
+  _onVideo360ViewCreated(Video360Controller? controller) {
     this.controller = controller;
   }
 }

@@ -3,9 +3,6 @@ class Video360PlayInfo {
   int total = 0;
   bool isPlaying = false;
 
-  Video360PlayInfo({
-    required this.duration,
-    required this.total,
-    required this.isPlaying
-  });
+  Video360PlayInfo(
+      {required this.duration, required this.total, required this.isPlaying});
 }

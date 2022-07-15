@@ -6,7 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:video_360/src/video360_controller.dart';
 import 'package:video_360/src/video360_ios_view.dart';
 
-typedef Video360ViewCreatedCallback = void Function(Video360Controller? controller);
+typedef Video360ViewCreatedCallback = void Function(
+    Video360Controller? controller);
 typedef PlatformViewCreatedCallback = void Function(int id);
 
 class Video360View extends StatefulWidget {
@@ -32,8 +33,8 @@ class Video360View extends StatefulWidget {
   State<Video360View> createState() => _Video360ViewState();
 }
 
-class _Video360ViewState extends State<Video360View> with WidgetsBindingObserver {
-
+class _Video360ViewState extends State<Video360View>
+    with WidgetsBindingObserver {
   Video360Controller? controller;
   bool isPlatformChannel = false;
 
@@ -55,38 +56,41 @@ class _Video360ViewState extends State<Video360View> with WidgetsBindingObserver
       //   viewType: 'kino_video_360',
       //   onPlatformViewCreated: _onPlatformViewCreated,
       // );
-      return isPlatformChannel == true ? PlatformViewLink(
-        viewType: 'kino_video_360',
-        surfaceFactory: (
-            BuildContext context,
-            PlatformViewController controller,
-            ) {
-          return AndroidViewSurface(
-            controller: controller as AndroidViewController,
-            gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
-            hitTestBehavior: PlatformViewHitTestBehavior.opaque,
-          );
-        },
-        onCreatePlatformView: (PlatformViewCreationParams params) {
-          final ExpensiveAndroidViewController controller =
-          PlatformViewsService.initExpensiveAndroidView(
-            id: params.id,
-            viewType: 'kino_video_360',
-            layoutDirection: TextDirection.ltr,
-            // creationParams: creationParams,
-            creationParams: <String, dynamic>{
-            },
-            creationParamsCodec: const StandardMessageCodec(),
-            onFocus: () => params.onFocusChanged(true),
-          );
-          controller
-            ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
-            ..addOnPlatformViewCreatedListener(_onPlatformViewCreated)
-            ..create();
+      return isPlatformChannel == true
+          ? PlatformViewLink(
+              viewType: 'kino_video_360',
+              surfaceFactory: (
+                BuildContext context,
+                PlatformViewController controller,
+              ) {
+                return AndroidViewSurface(
+                  controller: controller as AndroidViewController,
+                  gestureRecognizers: const <
+                      Factory<OneSequenceGestureRecognizer>>{},
+                  hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+                );
+              },
+              onCreatePlatformView: (PlatformViewCreationParams params) {
+                final ExpensiveAndroidViewController controller =
+                    PlatformViewsService.initExpensiveAndroidView(
+                  id: params.id,
+                  viewType: 'kino_video_360',
+                  layoutDirection: TextDirection.ltr,
+                  // creationParams: creationParams,
+                  creationParams: <String, dynamic>{},
+                  creationParamsCodec: const StandardMessageCodec(),
+                  onFocus: () => params.onFocusChanged(true),
+                );
+                controller
+                  ..addOnPlatformViewCreatedListener(
+                      params.onPlatformViewCreated)
+                  ..addOnPlatformViewCreatedListener(_onPlatformViewCreated)
+                  ..create();
 
-          return controller;
-        },
-      ): Container();
+                return controller;
+              },
+            )
+          : Container();
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       return Container(
         child: GestureDetector(
@@ -95,26 +99,23 @@ class _Video360ViewState extends State<Video360View> with WidgetsBindingObserver
             onPlatformViewCreated: _onPlatformViewCreated,
           ),
           onPanStart: (details) {
-            controller?.onPanUpdate(true, details.localPosition.dx, details.localPosition.dy);
+            controller?.onPanUpdate(
+                true, details.localPosition.dx, details.localPosition.dy);
           },
           onPanUpdate: (details) {
-            controller?.onPanUpdate(false, details.localPosition.dx, details.localPosition.dy);
+            controller?.onPanUpdate(
+                false, details.localPosition.dx, details.localPosition.dy);
           },
         ),
       );
     }
     return Center(
       child: Text(
-        '$defaultTargetPlatform is not supported by the video360_view plugin'),
+          '$defaultTargetPlatform is not supported by the video360_view plugin'),
     );
   }
 
   void _onPlatformViewCreated(int id) {
-    if (widget.onVideo360ViewCreated == null) {
-      return;
-    }
-
-    // var pixelRatio = window.devicePixelRatio;
     RenderBox? box = context.findRenderObject() as RenderBox?;
 
     var width = box?.size.width ?? 0.0;
