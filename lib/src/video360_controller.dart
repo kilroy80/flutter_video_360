@@ -52,6 +52,7 @@ class Video360Controller {
 
   dispose() async {
     try {
+      playInfoStream?.cancel();
       await _channel.invokeMethod<void>('dispose');
     } on PlatformException catch (e) {
       print('${e.code}: ${e.message}');
