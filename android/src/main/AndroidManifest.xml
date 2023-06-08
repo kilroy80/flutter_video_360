@@ -1,15 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.kino.video_360">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-
-    <application>
+  <uses-permission android:name="android.permission.INTERNET" />
+  <application>
         <activity
             android:name=".player.VRActivity"
             android:launchMode="singleTask"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|layoutDirection"
             android:imeOptions="flagNoExtractUi|flagNoFullscreen"
             android:windowSoftInputMode="adjustNothing|stateHidden" />
-    </application>
-
+  </application>
 </manifest>

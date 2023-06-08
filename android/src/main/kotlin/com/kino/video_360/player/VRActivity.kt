@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
+
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ExoPlayer
@@ -43,7 +44,7 @@ class VRActivity : Activity(), Player.Listener {
         window.decorView.setBackgroundColor(Color.BLACK)
 
         val i = intent
-        videoUrl = i.getStringExtra(VRActivity.EXTRA_URL) ?: "https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8"
+        videoUrl = i.getStringExtra(EXTRA_URL) ?: "https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8"
 
         vrPlayer = findViewById(R.id.vr_player)
         (vrPlayer.videoSurfaceView as SphericalGLSurfaceView)

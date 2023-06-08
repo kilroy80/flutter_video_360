@@ -26,6 +26,7 @@ import com.google.android.exoplayer2.util.Util
 import com.google.android.exoplayer2.video.spherical.SphericalGLSurfaceView
 import io.flutter.view.TextureRegistry
 
+
 class Video360UIView : FrameLayout, Player.Listener {
 
     private val TAG = Video360UIView::class.java.simpleName
@@ -55,28 +56,31 @@ class Video360UIView : FrameLayout, Player.Listener {
 
     private fun init() {
         val layout = ViewGroup.LayoutParams(
-                LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT
+            LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT
         )
         layoutParams = layout
 
         inflate(context, R.layout.view_vr, this)
 
+
         vrPlayer = findViewById(R.id.vr_player)
 
+
+
         (vrPlayer.videoSurfaceView as SphericalGLSurfaceView)
-                .setDefaultStereoMode(C.STEREO_MODE_STEREO_MESH)
+            .setDefaultStereoMode(C.STEREO_MODE_STEREO_MESH)
         vrPlayer.useController = false
 //        vrPlayer.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
 
         bandwidthMeter = DefaultBandwidthMeter.Builder(context)
-                .build()
+            .build()
     }
 
     private fun buildDataSourceFactory(context: Context, cookieValue: String): DataSource.Factory {
         val defaultHttpFactory = DefaultHttpDataSource.Factory()
-                defaultHttpFactory.setUserAgent(Util.getUserAgent(context, "kino_video_360"))
-                defaultHttpFactory.setTransferListener(bandwidthMeter)
-                defaultHttpFactory.setDefaultRequestProperties(mapOf("Cookie" to cookieValue))
+        defaultHttpFactory.setUserAgent(Util.getUserAgent(context, "kino_video_360"))
+        defaultHttpFactory.setTransferListener(bandwidthMeter)
+        defaultHttpFactory.setDefaultRequestProperties(mapOf("Cookie" to cookieValue))
 
         return DefaultDataSource.Factory(context, defaultHttpFactory)
     }
@@ -88,12 +92,12 @@ class Video360UIView : FrameLayout, Player.Listener {
             C.TYPE_DASH -> {
                 val dashChunkSourceFactory = DefaultDashChunkSource.Factory(dataFactory)
                 return DashMediaSource.Factory(dashChunkSourceFactory, null)
-                        .createMediaSource(mediaItem)
+                    .createMediaSource(mediaItem)
             }
             C.TYPE_SS -> {
                 val ssChunkSourceFactory = DefaultSsChunkSource.Factory(dataFactory)
                 return SsMediaSource.Factory(ssChunkSourceFactory, null)
-                        .createMediaSource(mediaItem)
+                    .createMediaSource(mediaItem)
             }
             C.TYPE_HLS -> {
                 return HlsMediaSource.Factory(dataFactory).createMediaSource(mediaItem)

@@ -5,9 +5,9 @@
 Pod::Spec.new do |s|
   s.name             = 'video_360'
   s.version          = '0.0.1'
-  s.summary          = 'video 360 player'
+  s.summary          = 'Simple video 360 degree player (Android - Exoplayer, iOS - Swifty360Player)'
   s.description      = <<-DESC
-video 360 player
+  Simple video 360 degree player (Android - Exoplayer, iOS - Swifty360Player)
                        DESC
   s.homepage         = 'http://example.com'
   s.license          = { :file => '../LICENSE' }
@@ -20,7 +20,4 @@ video 360 player
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
   s.swift_version = '5.0'
-
-  # s.dependency 'Swifty360Player', '~> 0.2.5'
-  # s.frameworks = 'Swifty360Player'
 end
