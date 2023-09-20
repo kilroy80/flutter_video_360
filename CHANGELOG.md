@@ -5,7 +5,7 @@
 
 ## 0.0.7
 
-* Feat : Upgrade Flutter support veriosn 3.0.0 
+* Feat : Upgrade Flutter support veriosn 3.0.0
 
 ## 0.0.6
 

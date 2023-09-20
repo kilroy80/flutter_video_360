@@ -3,34 +3,29 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:video_360/src/video360_android_view.dart';
-import 'package:video_360/src/video360_controller.dart';
-import 'package:video_360/src/video360_ios_view.dart';
+import 'package:video_360/src/video_360_controller.dart';
+import 'package:video_360/src/view/video_360_android_view.dart';
+import 'package:video_360/src/view/video_360_ios_view.dart';
 
 typedef Video360ViewCreatedCallback = void Function(
-    Video360Controller? controller);
-typedef PlatformViewCreatedCallback = void Function(int id);
+    Video360Controller controller);
 
 class Video360View extends StatefulWidget {
-  final Video360ViewCreatedCallback onVideo360ViewCreated;
-
-  final String? url;
-  final bool? isAutoPlay;
-  final bool? isRepeat;
-  final bool? useAndroidViewSurface;
-  final Video360ControllerCallback? onCallback;
-  final Video360ControllerPlayInfo? onPlayInfo;
 
   const Video360View({
     Key? key,
     required this.onVideo360ViewCreated,
     this.url,
-    this.isAutoPlay = true,
-    this.isRepeat = true,
+    this.isRepeat = false,
     this.useAndroidViewSurface = false,
-    this.onCallback,
     this.onPlayInfo,
   }) : super(key: key);
+
+  final Video360ViewCreatedCallback onVideo360ViewCreated;
+  final String? url;
+  final bool? isRepeat;
+  final bool? useAndroidViewSurface;
+  final Video360ControllerPlayInfo? onPlayInfo;
 
   @override
   State<Video360View> createState() => _Video360ViewState();
@@ -38,68 +33,14 @@ class Video360View extends StatefulWidget {
 
 class _Video360ViewState extends State<Video360View>
     with WidgetsBindingObserver {
-  Video360Controller? controller;
-  bool isPlatformChannel = false;
+
+  final String viewName = 'kino_video_360';
+  late Video360Controller controller;
 
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
-    Future.delayed(Duration(milliseconds: 250), () {
-      setState(() {
-        isPlatformChannel = true;
-      });
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      return isPlatformChannel == true
-          ? _getAndroidView()
-          : Container();
-    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-      return Container(
-        child: GestureDetector(
-          child: Video360IOSView(
-            viewType: 'kino_video_360',
-            onPlatformViewCreated: _onPlatformViewCreated,
-          ),
-          onPanStart: (details) {
-            controller?.onPanUpdate(
-                true, details.localPosition.dx, details.localPosition.dy);
-          },
-          onPanUpdate: (details) {
-            controller?.onPanUpdate(
-                false, details.localPosition.dx, details.localPosition.dy);
-          },
-        ),
-      );
-    }
-    return Center(
-      child: Text(
-          '$defaultTargetPlatform is not supported by the video360_view plugin'),
-    );
-  }
-
-  void _onPlatformViewCreated(int id) {
-    RenderBox? box = context.findRenderObject() as RenderBox?;
-
-    var width = box?.size.width ?? 0.0;
-    var heigt = box?.size.height ?? 0.0;
-
-    controller = Video360Controller(
-      id: id,
-      url: widget.url,
-      width: width,
-      height: heigt,
-      isAutoPlay: widget.isAutoPlay,
-      isRepeat: widget.isRepeat,
-      onCallback: widget.onCallback,
-      onPlayInfo: widget.onPlayInfo,
-    );
-    controller?.updateTime();
-    widget.onVideo360ViewCreated(controller!);
   }
 
   @override
@@ -108,9 +49,54 @@ class _Video360ViewState extends State<Video360View>
     super.dispose();
   }
 
-  Widget _getAndroidView() {
+  @override
+  Widget build(BuildContext context) {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      return _createAndroidView();
+    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+      return GestureDetector(
+        child: Video360IOSView(
+          viewType: viewName,
+          onPlatformViewCreated: _onPlatformViewCreated,
+        ),
+        onPanStart: (details) {
+          controller.onPanUpdate(
+              true, details.localPosition.dx, details.localPosition.dy);
+        },
+        onPanUpdate: (details) {
+          controller.onPanUpdate(
+              false, details.localPosition.dx, details.localPosition.dy);
+        },
+      );
+    }
+    return Center(
+      child: Text(
+        '$defaultTargetPlatform is not supported by the video360_view plugin',
+      ),
+    );
+  }
+
+  void _onPlatformViewCreated(int id) {
+    RenderBox? box = context.findRenderObject() as RenderBox?;
+
+    var width = box?.size.width ?? 0.0;
+    var height = box?.size.height ?? 0.0;
+
+    controller = Video360Controller(
+      id: id,
+      url: widget.url,
+      width: width,
+      height: height,
+      isRepeat: widget.isRepeat,
+      onPlayInfo: widget.onPlayInfo,
+    );
+
+    widget.onVideo360ViewCreated(controller);
+  }
+
+  Widget _createAndroidView() {
     return widget.useAndroidViewSurface == true ? PlatformViewLink(
-      viewType: 'kino_video_360',
+      viewType: viewName,
       surfaceFactory: (
           BuildContext context,
           PlatformViewController controller,
@@ -126,7 +112,7 @@ class _Video360ViewState extends State<Video360View>
         final ExpensiveAndroidViewController controller =
         PlatformViewsService.initExpensiveAndroidView(
           id: params.id,
-          viewType: 'kino_video_360',
+          viewType: viewName,
           layoutDirection: TextDirection.ltr,
           // creationParams: creationParams,
           creationParams: <String, dynamic>{},
@@ -142,8 +128,8 @@ class _Video360ViewState extends State<Video360View>
         return controller;
       },
     )
-    : Video360AndroidView(
-      viewType: 'kino_video_360',
+        : Video360AndroidView(
+      viewType: viewName,
       onPlatformViewCreated: _onPlatformViewCreated,
     );
   }

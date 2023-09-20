@@ -6,7 +6,7 @@ Simple 360 video player plugin
 # Notice
 
 Flutter Version <= 2.10.5 used this plugin version 0.0.6<br>
-Flutter Version >= 3.0.0 used this plugin version 0.0.8 
+Flutter Version >= 3.0.0 used this plugin version 0.0.8
 
 ## Getting Started
 

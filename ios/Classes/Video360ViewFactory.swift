@@ -1,7 +1,7 @@
 import Flutter
 import UIKit
  
-public class Video360ViewFactoy: NSObject, FlutterPlatformViewFactory {
+public class Video360ViewFactory: NSObject, FlutterPlatformViewFactory {
     
     private var registrar: FlutterPluginRegistrar
     

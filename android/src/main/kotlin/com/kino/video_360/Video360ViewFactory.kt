@@ -8,13 +8,14 @@ import io.flutter.plugin.platform.PlatformView
 import io.flutter.plugin.platform.PlatformViewFactory
 import io.flutter.view.TextureRegistry
 
-class Video360ViewFactory(private val messenger: BinaryMessenger, private val textureRegistry: TextureRegistry)
+class Video360ViewFactory(private val messenger: BinaryMessenger,
+                          private val textureRegistry: TextureRegistry)
     : PlatformViewFactory(StandardMessageCodec.INSTANCE) {
 
     override fun create(context: Context?, id: Int, args: Any?): PlatformView {
-        val params = args as HashMap<*, *>
-        Log.i("Video360ViewFactory", id.toString())
-        Log.i("Video360ViewFactory", args.toString())
+//        val params = args as HashMap<*, *>
+//        Log.d("Video360ViewFactory", id.toString())
+//        Log.d("Video360ViewFactory", args.toString())
         return Video360View(context!!, messenger, id, textureRegistry)
     }
 }

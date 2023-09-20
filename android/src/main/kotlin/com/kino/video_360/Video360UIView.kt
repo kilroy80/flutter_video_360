@@ -6,34 +6,34 @@ import android.os.Build
 import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
-import com.google.android.exoplayer2.source.dash.DashMediaSource
-import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource
-import com.google.android.exoplayer2.source.hls.HlsMediaSource
-import com.google.android.exoplayer2.source.smoothstreaming.DefaultSsChunkSource
-import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource
-import com.google.android.exoplayer2.ui.StyledPlayerView
-import com.google.android.exoplayer2.upstream.DataSource
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
-import com.google.android.exoplayer2.upstream.DefaultDataSource
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
-import com.google.android.exoplayer2.util.Util
-import com.google.android.exoplayer2.video.spherical.SphericalGLSurfaceView
+import androidx.media3.common.C
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.common.util.Util
+import androidx.media3.datasource.DataSource
+import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.dash.DashMediaSource
+import androidx.media3.exoplayer.dash.DefaultDashChunkSource
+import androidx.media3.exoplayer.hls.HlsMediaSource
+import androidx.media3.exoplayer.smoothstreaming.DefaultSsChunkSource
+import androidx.media3.exoplayer.smoothstreaming.SsMediaSource
+import androidx.media3.exoplayer.source.MediaSource
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter
+import androidx.media3.exoplayer.video.spherical.SphericalGLSurfaceView
+import androidx.media3.ui.PlayerView
 import io.flutter.view.TextureRegistry
 
 class Video360UIView : FrameLayout, Player.Listener {
 
-    private val TAG = Video360UIView::class.java.simpleName
+    private val tag = Video360UIView::class.java.simpleName
 
-    private lateinit var vrPlayer: StyledPlayerView
+    private lateinit var vrPlayer: PlayerView
     private var player: ExoPlayer? = null
     private var videoUrl = ""
-    private var isAutoPlay = true
+    private var isAutoPlay = false
     private var isRepeat = false
 
     private lateinit var bandwidthMeter: DefaultBandwidthMeter
@@ -49,7 +49,8 @@ class Video360UIView : FrameLayout, Player.Listener {
         init()
     }
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int)
+            : super(context, attrs, defStyleAttr) {
         init()
     }
 
@@ -84,21 +85,21 @@ class Video360UIView : FrameLayout, Player.Listener {
     private fun buildMediaSource(url: String, dataFactory: DataSource.Factory): MediaSource? {
         val uri = Uri.parse(url)
         val mediaItem = MediaItem.fromUri(uri)
-        when (Util.inferContentType(url)) {
-            C.TYPE_DASH -> {
+        when (Util.inferContentType(uri)) {
+            C.CONTENT_TYPE_DASH -> {
                 val dashChunkSourceFactory = DefaultDashChunkSource.Factory(dataFactory)
                 return DashMediaSource.Factory(dashChunkSourceFactory, null)
                         .createMediaSource(mediaItem)
             }
-            C.TYPE_SS -> {
+            C.CONTENT_TYPE_SS -> {
                 val ssChunkSourceFactory = DefaultSsChunkSource.Factory(dataFactory)
                 return SsMediaSource.Factory(ssChunkSourceFactory, null)
                         .createMediaSource(mediaItem)
             }
-            C.TYPE_HLS -> {
+            C.CONTENT_TYPE_HLS -> {
                 return HlsMediaSource.Factory(dataFactory).createMediaSource(mediaItem)
             }
-            C.TYPE_OTHER -> {
+            C.CONTENT_TYPE_OTHER -> {
                 return ProgressiveMediaSource.Factory(dataFactory).createMediaSource(mediaItem)
             }
             else -> {

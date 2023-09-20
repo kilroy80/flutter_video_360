@@ -16,58 +16,47 @@ import io.flutter.plugin.common.MethodChannel.Result
 /** Video360Plugin */
 class Video360Plugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
-    private val TAG = Video360Plugin::class.java.simpleName
-    private var flutterPluginBinding: FlutterPlugin.FlutterPluginBinding? = null
+  private val tag = Video360Plugin::class.java.simpleName
+  private var flutterPluginBinding: FlutterPlugin.FlutterPluginBinding? = null
 
-    private lateinit var channel : MethodChannel
-    private lateinit var context: Context
-    private lateinit var activity: Activity
+  private lateinit var channel : MethodChannel
+  private lateinit var context: Context
+  private lateinit var activity: Activity
 
-    override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        Log.i(TAG, "onAttachedToEngine")
-        this.flutterPluginBinding = flutterPluginBinding
+  override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+    Log.d(tag, "onAttachedToEngine")
+    this.flutterPluginBinding = flutterPluginBinding
 
-        flutterPluginBinding.platformViewRegistry.registerViewFactory("kino_video_360",
-            Video360ViewFactory(flutterPluginBinding.binaryMessenger, flutterPluginBinding.textureRegistry))
-    }
+    flutterPluginBinding.platformViewRegistry.registerViewFactory(
+      "kino_video_360",
+      Video360ViewFactory(flutterPluginBinding.binaryMessenger, flutterPluginBinding.textureRegistry)
+    )
+  }
 
-    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
-//        if (call.method == "openPlayer") {
-//            val url = call.argument<String>("url") ?: ""
-//
-//            val intent = Intent(context, VRActivity::class.java)
-//            intent.putExtra(VRActivity.EXTRA_URL, url)
-//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//            context.startActivity(intent)
-//
-//            result.success(null)
-//        } else {
-//            result.notImplemented()
-//        }
-    }
+  override fun onMethodCall(call: MethodCall, result: Result) {
+  }
 
-    override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
-    //    channel.setMethodCallHandler(null)
-        Log.i(TAG, "onDetachedFromEngine")
-        this.flutterPluginBinding = null
-    }
+  override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+    Log.d(tag, "onDetachedFromEngine")
+    this.flutterPluginBinding = null
+  }
 
-    override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-        Log.i(TAG, "onAttachedToActivity")
-        activity = binding.activity
-    }
+  override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+    Log.d(tag, "onAttachedToActivity")
+    activity = binding.activity
+  }
 
-    override fun onDetachedFromActivityForConfigChanges() {
-        Log.i(TAG, "onDetachedFromActivityForConfigChanges")
-        onDetachedFromActivity()
-    }
+  override fun onDetachedFromActivityForConfigChanges() {
+    Log.d(tag, "onDetachedFromActivityForConfigChanges")
+    onDetachedFromActivity()
+  }
 
-    override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-        Log.i(TAG, "onReattachedToActivityForConfigChanges")
-        onAttachedToActivity(binding)
-    }
+  override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+    Log.d(tag, "onReattachedToActivityForConfigChanges")
+    onAttachedToActivity(binding)
+  }
 
-    override fun onDetachedFromActivity() {
-        Log.i(TAG,"onDetachedFromActivity")
-    }
+  override fun onDetachedFromActivity() {
+    Log.d(tag,"onDetachedFromActivity")
+  }
 }
