@@ -26,14 +26,16 @@ class Video360Controller {
 
   StreamSubscription? playInfoStream;
 
-  Future<void> init(String url, double width, double height, bool isRepeat) async {
+  Future<void> init(
+      String url, double width, double height, bool isRepeat) async {
     if (playInfoStream != null) {
       playInfoStream?.cancel();
       playInfoStream = null;
     }
 
-    playInfoStream = Stream.periodic(const Duration(milliseconds: 100), (x) => x)
-        .listen((event) async {
+    playInfoStream =
+        Stream.periodic(const Duration(milliseconds: 100), (x) => x)
+            .listen((event) async {
       var duration = await getCurrentPosition();
       var total = await getDuration();
       var isPlay = await isPlaying();

@@ -11,7 +11,6 @@ typedef Video360ViewCreatedCallback = void Function(
     Video360Controller controller);
 
 class Video360View extends StatefulWidget {
-
   const Video360View({
     Key? key,
     required this.onVideo360ViewCreated,
@@ -33,7 +32,6 @@ class Video360View extends StatefulWidget {
 
 class _Video360ViewState extends State<Video360View>
     with WidgetsBindingObserver {
-
   final String viewName = 'kino_video_360';
   late Video360Controller controller;
 
@@ -95,42 +93,42 @@ class _Video360ViewState extends State<Video360View>
   }
 
   Widget _createAndroidView() {
-    return widget.useAndroidViewSurface == true ? PlatformViewLink(
-      viewType: viewName,
-      surfaceFactory: (
-          BuildContext context,
-          PlatformViewController controller,
-          ) {
-        return AndroidViewSurface(
-          controller: controller as AndroidViewController,
-          gestureRecognizers: const <
-              Factory<OneSequenceGestureRecognizer>>{},
-          hitTestBehavior: PlatformViewHitTestBehavior.opaque,
-        );
-      },
-      onCreatePlatformView: (PlatformViewCreationParams params) {
-        final ExpensiveAndroidViewController controller =
-        PlatformViewsService.initExpensiveAndroidView(
-          id: params.id,
-          viewType: viewName,
-          layoutDirection: TextDirection.ltr,
-          // creationParams: creationParams,
-          creationParams: <String, dynamic>{},
-          creationParamsCodec: const StandardMessageCodec(),
-          onFocus: () => params.onFocusChanged(true),
-        );
-        controller
-          ..addOnPlatformViewCreatedListener(
-              params.onPlatformViewCreated)
-          ..addOnPlatformViewCreatedListener(_onPlatformViewCreated)
-          ..create();
+    return widget.useAndroidViewSurface == true
+        ? PlatformViewLink(
+            viewType: viewName,
+            surfaceFactory: (
+              BuildContext context,
+              PlatformViewController controller,
+            ) {
+              return AndroidViewSurface(
+                controller: controller as AndroidViewController,
+                gestureRecognizers: const <Factory<
+                    OneSequenceGestureRecognizer>>{},
+                hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+              );
+            },
+            onCreatePlatformView: (PlatformViewCreationParams params) {
+              final ExpensiveAndroidViewController controller =
+                  PlatformViewsService.initExpensiveAndroidView(
+                id: params.id,
+                viewType: viewName,
+                layoutDirection: TextDirection.ltr,
+                // creationParams: creationParams,
+                creationParams: <String, dynamic>{},
+                creationParamsCodec: const StandardMessageCodec(),
+                onFocus: () => params.onFocusChanged(true),
+              );
+              controller
+                ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
+                ..addOnPlatformViewCreatedListener(_onPlatformViewCreated)
+                ..create();
 
-        return controller;
-      },
-    )
+              return controller;
+            },
+          )
         : Video360AndroidView(
-      viewType: viewName,
-      onPlatformViewCreated: _onPlatformViewCreated,
-    );
+            viewType: viewName,
+            onPlatformViewCreated: _onPlatformViewCreated,
+          );
   }
 }

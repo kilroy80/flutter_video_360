@@ -23,8 +23,8 @@ abstract class Video360Platform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<void> init(
-      int viewId, String url, double width, double height, bool isRepeat) async {
+  Future<void> init(int viewId, String url, double width, double height,
+      bool isRepeat) async {
     throw UnimplementedError('init() has not been implemented.');
   }
 

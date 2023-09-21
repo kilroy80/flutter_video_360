@@ -1,5 +1,4 @@
 class Video360PlayInfo {
-
   Video360PlayInfo({
     required this.duration,
     required this.total,

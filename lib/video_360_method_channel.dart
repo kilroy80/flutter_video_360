@@ -7,12 +7,11 @@ import 'video_360_platform_interface.dart';
 
 /// An implementation of [Video360Platform] that uses method channels.
 class MethodChannelVideo360 extends Video360Platform {
-
   final String channelPrefix = 'kino_video_360';
 
   @override
-  Future<void> init(int viewId,
-      String url, double width, double height, bool isRepeat) async {
+  Future<void> init(int viewId, String url, double width, double height,
+      bool isRepeat) async {
     try {
       var methodChannel = MethodChannel('${channelPrefix}_$viewId');
       await methodChannel.invokeMethod<void>('init', {
