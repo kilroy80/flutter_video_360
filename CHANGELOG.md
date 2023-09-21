@@ -1,3 +1,8 @@
+## 0.0.9
+
+* Feat : Replace Exoplayer -> AndroidX Media3
+* Refactor: Platform Interface
+
 ## 0.0.8
 
 * Fix : Android release build bug

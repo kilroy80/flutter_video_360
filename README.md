@@ -10,9 +10,9 @@ Flutter Version >= 3.0.0 used this plugin version 0.0.8
 
 ## Getting Started
 
-The Android uses the open source [Google ExoPlayer](https://github.com/google/ExoPlayer)
+The Android uses the open source [AndroidX Media3](https://github.com/androidx/media)
 
-> Google ExoPlayer Version: 2.17.1
+> AndroidX Media3 : 1.1.1 (via Google ExoPlayer Version: 2.19.1)
 
 The iOS uses the open source [Swifty360Player](https://github.com/abdullahselek/Swifty360Player)
 
@@ -24,12 +24,12 @@ Add pubspec.yaml dependencies.
 
 ```dart
 dependencies:
-  video_360: ^0.0.8
+  video_360: ^0.0.9
 ```
 
 Android Requirements
 
-> Minimum SDK Target : 16
+> Minimum SDK Target : 19
 
 iOS Requirements
 
@@ -49,9 +49,8 @@ Add Video360View:
 ```dart
 Video360View(
     onVideo360ViewCreated: _onVideo360ViewCreated,
-    url: YOUR_360_VIDEO_URL,
-    isAutoPlay: true,   // defalut : true
-    isRepeat: true, // defalut : true
+    url: YOUR_360_VIDEO_URL,    
+    isRepeat: true, // defalut : false
     onPlayInfo: (Video360PlayInfo info) {
         // Play info Callback
     },
@@ -195,6 +194,7 @@ class _MyAppState extends State<MyApp> {
 
   _onVideo360ViewCreated(Video360Controller? controller) {
     this.controller = controller;
+    this.controller.play();
   }
 }
 ```
