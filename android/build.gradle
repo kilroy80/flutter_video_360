@@ -71,17 +71,19 @@ android {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation "androidx.appcompat:appcompat:1.4.1"
+    implementation "androidx.core:core-ktx:1.7.0"
+    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
 
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation "androidx.multidex:multidex:2.0.1"
 
-    implementation 'androidx.media3:media3-exoplayer:1.1.1'
-    implementation 'androidx.media3:media3-exoplayer-dash:1.1.1'
-    implementation 'androidx.media3:media3-exoplayer-smoothstreaming:1.1.1'
-    implementation 'androidx.media3:media3-exoplayer-hls:1.1.1'
-    implementation 'androidx.media3:media3-ui:1.1.1'
+    def media3version = "1.1.1"
+    implementation "androidx.media3:media3-exoplayer:$media3version"
+    implementation "androidx.media3:media3-exoplayer-dash:$media3version"
+    implementation "androidx.media3:media3-exoplayer-smoothstreaming:$media3version"
+    implementation "androidx.media3:media3-exoplayer-hls:$media3version"
+    implementation "androidx.media3:media3-ui:$media3version"
+//    implementation "androidx.media3:media3-session:$media3version"
 //    implementation 'androidx.media3:media3-exoplayer-rtmp:1.1.1'
 //    implementation 'com.google.android.exoplayer:extension-mediasession:2.17.0'
 }
