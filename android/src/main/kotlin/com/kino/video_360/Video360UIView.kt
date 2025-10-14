@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.util.AttributeSet
+import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.media3.common.C
@@ -146,18 +147,18 @@ class Video360UIView : FrameLayout, Player.Listener {
         }
     }
 
-    override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-        when (playbackState) {
-            Player.STATE_BUFFERING -> {
-            }
-            Player.STATE_IDLE -> {
-            }
-            Player.STATE_READY -> {
-            }
-            Player.STATE_ENDED -> {
-            }
-        }
-    }
+//    override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+//        when (playbackState) {
+//            Player.STATE_BUFFERING -> {
+//            }
+//            Player.STATE_IDLE -> {
+//            }
+//            Player.STATE_READY -> {
+//            }
+//            Player.STATE_ENDED -> {
+//            }
+//        }
+//    }
 
     fun onStart() {
         if (Build.VERSION.SDK_INT > 23) {
@@ -189,14 +190,22 @@ class Video360UIView : FrameLayout, Player.Listener {
     }
 
     fun play() {
-        if (player?.isPlaying == false) {
-            player?.play()
+        try {
+            if (player?.isPlaying == false) {
+                player?.play()
+            }
+        } catch (e: Exception) {
+            Log.d(tag, "play error : $e")
         }
     }
 
     fun stop() {
-        if (player?.isPlaying == true) {
-            player?.pause()
+        try {
+            if (player?.isPlaying == true) {
+                player?.pause()
+            }
+        } catch (e: Exception) {
+            Log.d(tag, "stop error : $e")
         }
     }
 

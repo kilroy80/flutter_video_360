@@ -7,6 +7,7 @@ import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformView
 import io.flutter.plugin.platform.PlatformViewFactory
 import io.flutter.view.TextureRegistry
+import java.lang.Exception
 
 class Video360ViewFactory(private val messenger: BinaryMessenger,
                           private val textureRegistry: TextureRegistry)
@@ -16,6 +17,7 @@ class Video360ViewFactory(private val messenger: BinaryMessenger,
 //        val params = args as HashMap<*, *>
 //        Log.d("Video360ViewFactory", id.toString())
 //        Log.d("Video360ViewFactory", args.toString())
-        return Video360View(context!!, messenger, id, textureRegistry)
+        if (context == null) throw Exception("Context is null!")
+        return Video360View(context, messenger, id, textureRegistry)
     }
 }
