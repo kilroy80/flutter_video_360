@@ -31,7 +31,7 @@ class Video360PlayInfo {
         'duration: $duration, '
         'total: $total, '
         'isPlaying: $isPlaying, '
-      ')';
+        ')';
   }
 
   Video360PlayInfo copyWith({

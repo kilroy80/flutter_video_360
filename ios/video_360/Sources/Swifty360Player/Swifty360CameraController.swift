@@ -22,10 +22,11 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
+import UIKit
 import SceneKit
 import CoreMotion
 
-public protocol Swifty360CameraControllerDelegate: class {
+public protocol Swifty360CameraControllerDelegate: AnyObject {
     /**
      Called the first time the user moves the camera.
 

@@ -1,5 +1,5 @@
 //
-//  SwiftySKVideoNode.swift
+//  Swifty360Player.h
 //  Swifty360Player
 //
 //  Copyright © 2017 Abdullah Selek. All rights reserved.
@@ -22,25 +22,12 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-import SpriteKit
-import AVFoundation
+#import <UIKit/UIKit.h>
 
-public protocol SwiftySKVideoNodeDelegate: class {
-    func videoNodeShouldAllowPlaybackToBegin(videoNode: SwiftySKVideoNode) -> Bool
-}
+//! Project version number for Swifty360Player.
+FOUNDATION_EXPORT double Swifty360PlayerVersionNumber;
 
-open class SwiftySKVideoNode: SKVideoNode {
+//! Project version string for Swifty360Player.
+FOUNDATION_EXPORT const unsigned char Swifty360PlayerVersionString[];
 
-    weak var swiftyDelegate: SwiftySKVideoNodeDelegate?
-
-    func setPaused(paused: Bool) {
-        if !paused && swiftyDelegate != nil {
-            if swiftyDelegate!.videoNodeShouldAllowPlaybackToBegin(videoNode: self) {
-                super.play()
-            }
-        } else {
-            super.pause()
-        }
-    }
-
-}
+// In this header, you should import all the public headers of your framework using statements like #import <Swifty360Player/PublicHeader.h>

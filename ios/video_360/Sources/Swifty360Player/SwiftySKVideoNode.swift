@@ -1,5 +1,5 @@
 //
-//  Swifty360MotionManagerObserverItem.swift
+//  SwiftySKVideoNode.swift
 //  Swifty360Player
 //
 //  Copyright © 2017 Abdullah Selek. All rights reserved.
@@ -22,14 +22,25 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-internal class Swifty360MotionManagerObserverItem {
+import SpriteKit
+import AVFoundation
 
-    internal let token: UUID
-    internal let preferredUpdateInterval: TimeInterval
+public protocol SwiftySKVideoNodeDelegate: AnyObject {
+    func videoNodeShouldAllowPlaybackToBegin(videoNode: SwiftySKVideoNode) -> Bool
+}
 
-    public init(withPreferredUpdateInterval interval: TimeInterval) {
-        self.token = UUID()
-        self.preferredUpdateInterval = interval
+open class SwiftySKVideoNode: SKVideoNode {
+
+    weak var swiftyDelegate: SwiftySKVideoNodeDelegate?
+
+    func setPaused(paused: Bool) {
+        if !paused && swiftyDelegate != nil {
+            if swiftyDelegate!.videoNodeShouldAllowPlaybackToBegin(videoNode: self) {
+                super.play()
+            }
+        } else {
+            super.pause()
+        }
     }
 
 }

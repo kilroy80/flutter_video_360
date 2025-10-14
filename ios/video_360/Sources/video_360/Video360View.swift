@@ -2,6 +2,10 @@ import Flutter
 import UIKit
 import AVKit
 
+#if USE_SPM_EXTERNAL_FRAMEWORK
+import Swifty360Player
+#endif
+
 class Video360View: UIView, FlutterPlugin {
 
     public static func register(with registrar: FlutterPluginRegistrar) {}
