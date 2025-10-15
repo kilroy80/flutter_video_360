@@ -1,3 +1,9 @@
+## 0.0.10
+
+* Require minimum Dart 3.5.0 and Flutter 3.24.0
+* Feat : Support iOS Swift Package Manager
+* Refactor: Platform Interface
+
 ## 0.0.9
 
 * Feat : Replace Exoplayer -> AndroidX Media3
@@ -10,7 +16,7 @@
 
 ## 0.0.7
 
-* Feat : Upgrade Flutter support veriosn 3.0.0
+* Feat : Upgrade Flutter support version 3.0.0
 
 ## 0.0.6
 

@@ -12,13 +12,13 @@ typedef Video360ViewCreatedCallback = void Function(
 
 class Video360View extends StatefulWidget {
   const Video360View({
-    Key? key,
+    super.key,
     required this.onVideo360ViewCreated,
     this.url,
     this.isRepeat = false,
-    this.useAndroidViewSurface = false,
+    this.useAndroidViewSurface = true,
     this.onPlayInfo,
-  }) : super(key: key);
+  });
 
   final Video360ViewCreatedCallback onVideo360ViewCreated;
   final String? url;
@@ -93,40 +93,31 @@ class _Video360ViewState extends State<Video360View>
   }
 
   Widget _createAndroidView() {
-    return widget.useAndroidViewSurface == true
-        ? PlatformViewLink(
+    return widget.useAndroidViewSurface == true ? PlatformViewLink(
       viewType: viewName,
-      surfaceFactory: (
-          BuildContext context,
-          PlatformViewController controller,
-          ) {
+      surfaceFactory: (context, controller) {
         return AndroidViewSurface(
           controller: controller as AndroidViewController,
-          gestureRecognizers: const <Factory<
-              OneSequenceGestureRecognizer>>{},
+          gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
           hitTestBehavior: PlatformViewHitTestBehavior.opaque,
         );
       },
-      onCreatePlatformView: (PlatformViewCreationParams params) {
-        final ExpensiveAndroidViewController controller =
-        PlatformViewsService.initExpensiveAndroidView(
+      onCreatePlatformView: (params) {
+        return PlatformViewsService.initSurfaceAndroidView(
           id: params.id,
           viewType: viewName,
           layoutDirection: TextDirection.ltr,
-          // creationParams: creationParams,
           creationParams: <String, dynamic>{},
           creationParamsCodec: const StandardMessageCodec(),
-          onFocus: () => params.onFocusChanged(true),
-        );
-        controller
+          onFocus: () {
+            params.onFocusChanged(true);
+          },
+        )
           ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
           ..addOnPlatformViewCreatedListener(_onPlatformViewCreated)
           ..create();
-
-        return controller;
       },
-    )
-        : Video360AndroidView(
+    ) : Video360AndroidView(
       viewType: viewName,
       onPlatformViewCreated: _onPlatformViewCreated,
     );

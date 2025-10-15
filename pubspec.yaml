@@ -1,11 +1,11 @@
 name: video_360
 description: Simple video 360 degree player (Android - Exoplayer, iOS - Swifty360Player)
-version: 0.0.9
+version: 0.0.10
 homepage: https://github.com/kilroy80/flutter_video_360
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
-  flutter: '>=3.0.0'
+  sdk: '^3.5.0'
+  flutter: '>=3.24.0'
 
 dependencies:
   flutter:

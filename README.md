@@ -16,7 +16,13 @@ The Android uses the open source [AndroidX Media3](https://github.com/androidx/m
 
 The iOS uses the open source [Swifty360Player](https://github.com/abdullahselek/Swifty360Player)
 
-> Swifty360Player Version: 0.2.5
+> Swifty360Player Version: 0.2.7
+
+## Requirements
+
+- Flutter >=3.24.0
+- Dart >=3.5.0
+- iOS >=12.0
 
 ## Installation
 
@@ -24,7 +30,7 @@ Add pubspec.yaml dependencies.
 
 ```dart
 dependencies:
-  video_360: ^0.0.9
+  video_360: ^0.0.10
 ```
 
 Android Requirements
@@ -38,7 +44,7 @@ iOS Requirements
 
 ## How to use
 
-importing the libray:
+importing the library:
 
 ```dart
 import 'package:video_360/video_360.dart';
@@ -50,7 +56,7 @@ Add Video360View:
 Video360View(
     onVideo360ViewCreated: _onVideo360ViewCreated,
     url: YOUR_360_VIDEO_URL,    
-    isRepeat: true, // defalut : false
+    isRepeat: true, // default : false
     onPlayInfo: (Video360PlayInfo info) {
         // Play info Callback
     },
@@ -113,7 +119,7 @@ class _MyAppState extends State<MyApp> {
               height: height,
               child: Video360View(
                 onVideo360ViewCreated: _onVideo360ViewCreated,
-                url: 'https://bitmovin-a.akamaihd.net/content/playhouse-vr/m3u8s/105560.m3u8',
+                url: 'https://cdn.bitmovin.com/content/assets/playhouse-vr/m3u8s/105560.m3u8',
                 onPlayInfo: (Video360PlayInfo info) {
                   setState(() {
                     durationText = info.duration.toString();
