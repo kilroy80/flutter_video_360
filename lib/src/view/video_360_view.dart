@@ -93,33 +93,36 @@ class _Video360ViewState extends State<Video360View>
   }
 
   Widget _createAndroidView() {
-    return widget.useAndroidViewSurface == true ? PlatformViewLink(
-      viewType: viewName,
-      surfaceFactory: (context, controller) {
-        return AndroidViewSurface(
-          controller: controller as AndroidViewController,
-          gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
-          hitTestBehavior: PlatformViewHitTestBehavior.opaque,
-        );
-      },
-      onCreatePlatformView: (params) {
-        return PlatformViewsService.initSurfaceAndroidView(
-          id: params.id,
-          viewType: viewName,
-          layoutDirection: TextDirection.ltr,
-          creationParams: <String, dynamic>{},
-          creationParamsCodec: const StandardMessageCodec(),
-          onFocus: () {
-            params.onFocusChanged(true);
-          },
-        )
-          ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
-          ..addOnPlatformViewCreatedListener(_onPlatformViewCreated)
-          ..create();
-      },
-    ) : Video360AndroidView(
-      viewType: viewName,
-      onPlatformViewCreated: _onPlatformViewCreated,
-    );
+    return widget.useAndroidViewSurface == true
+        ? PlatformViewLink(
+            viewType: viewName,
+            surfaceFactory: (context, controller) {
+              return AndroidViewSurface(
+                controller: controller as AndroidViewController,
+                gestureRecognizers: const <Factory<
+                    OneSequenceGestureRecognizer>>{},
+                hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+              );
+            },
+            onCreatePlatformView: (params) {
+              return PlatformViewsService.initSurfaceAndroidView(
+                id: params.id,
+                viewType: viewName,
+                layoutDirection: TextDirection.ltr,
+                creationParams: <String, dynamic>{},
+                creationParamsCodec: const StandardMessageCodec(),
+                onFocus: () {
+                  params.onFocusChanged(true);
+                },
+              )
+                ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
+                ..addOnPlatformViewCreatedListener(_onPlatformViewCreated)
+                ..create();
+            },
+          )
+        : Video360AndroidView(
+            viewType: viewName,
+            onPlatformViewCreated: _onPlatformViewCreated,
+          );
   }
 }

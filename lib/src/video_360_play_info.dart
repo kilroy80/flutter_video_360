@@ -22,8 +22,11 @@ class Video360PlayInfo {
 
   @override
   int get hashCode => Object.hash(
-    runtimeType, duration, total, isPlaying,
-  );
+        runtimeType,
+        duration,
+        total,
+        isPlaying,
+      );
 
   @override
   String toString() {

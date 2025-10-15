@@ -1,3 +1,7 @@
+## 0.0.11
+
+* Fix : Bundling PrivacyInfo.xcprivacy when using SPM on iOS
+
 ## 0.0.10
 
 * Require minimum Dart 3.5.0 and Flutter 3.24.0

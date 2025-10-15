@@ -7,7 +7,7 @@ class Video360AndroidView extends AndroidView {
     required super.viewType,
     super.onPlatformViewCreated,
   }) : super(
-    creationParams: <String, dynamic>{},
-    creationParamsCodec: const StandardMessageCodec(),
-  );
+          creationParams: <String, dynamic>{},
+          creationParamsCodec: const StandardMessageCodec(),
+        );
 }

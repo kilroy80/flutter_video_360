@@ -36,12 +36,12 @@ class Video360Controller {
     playInfoStream =
         Stream.periodic(const Duration(milliseconds: 100), (x) => x)
             .listen((event) async {
-          var duration = await getCurrentPosition();
-          var total = await getDuration();
-          var isPlay = await isPlaying();
-          onPlayInfo?.call(Video360PlayInfo(
-              duration: duration, total: total, isPlaying: isPlay));
-        });
+      var duration = await getCurrentPosition();
+      var total = await getDuration();
+      var isPlay = await isPlaying();
+      onPlayInfo?.call(Video360PlayInfo(
+          duration: duration, total: total, isPlaying: isPlay));
+    });
 
     await Video360Platform.instance.init(id, url, width, height, isRepeat);
   }

@@ -30,7 +30,7 @@ Add pubspec.yaml dependencies.
 
 ```dart
 dependencies:
-  video_360: ^0.0.10
+  video_360: ^0.0.11
 ```
 
 Android Requirements

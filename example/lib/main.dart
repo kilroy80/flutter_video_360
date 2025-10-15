@@ -41,7 +41,8 @@ class _MyAppState extends State<MyApp> {
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               child: Video360View(
-                url: 'https://cdn.bitmovin.com/content/assets/playhouse-vr/m3u8s/105560.m3u8',
+                url:
+                    'https://cdn.bitmovin.com/content/assets/playhouse-vr/m3u8s/105560.m3u8',
                 onVideo360ViewCreated: _onVideo360ViewCreated,
                 onPlayInfo: (Video360PlayInfo info) {
                   setState(() {
