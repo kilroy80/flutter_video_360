@@ -5,8 +5,9 @@ Simple 360 video player plugin
 
 # Notice
 
-Flutter Version <= 2.10.5 used this plugin version 0.0.6<br>
-Flutter Version >= 3.0.0 used this plugin version 0.0.8
+The minimum-supported Flutter version has been updated to 3.24. If you are using an earlier version of Flutter, please refer to the previous version of the library.
+
+> Flutter Version <= 2.10.5 used this plugin version 0.0.6
 
 ## Getting Started
 
@@ -22,7 +23,6 @@ The iOS uses the open source [Swifty360Player](https://github.com/abdullahselek/
 
 - Flutter >=3.24.0
 - Dart >=3.5.0
-- iOS >=12.0
 
 ## Installation
 
@@ -39,7 +39,7 @@ Android Requirements
 
 iOS Requirements
 
-> Minimum iOS Target : 11.0<br>
+> Minimum iOS Target : 12.0<br>
 > Swift Version : 5.x
 
 ## How to use
