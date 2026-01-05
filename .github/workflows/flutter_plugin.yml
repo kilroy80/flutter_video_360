@@ -1,13 +1,14 @@
 name: Flutter Plugin CI
 
 on:
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
+#  push:
+#    branches: [master]
+#  pull_request:
+#    branches: [master]
+  workflow_dispatch:
 
 jobs:
-  build_android:
+  build_android_test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
@@ -56,7 +57,7 @@ jobs:
             fi
           done < <(find output_apk -name "*.so" -print0)
 
-  build_ios:
+  build_ios_test:
     runs-on: macos-latest
     steps:
       - name: Checkout source
