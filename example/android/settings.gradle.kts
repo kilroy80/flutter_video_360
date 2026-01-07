@@ -23,5 +23,5 @@ plugins {
     id("org.jetbrains.kotlin.android") version "2.1.0" apply false
 }
 
-rootProject.name = "video_360_example"
+rootProject.name = "flutter_video_360"
 include(":app")
