@@ -138,7 +138,7 @@ open class Swifty360MotionManager: Swifty360MotionManagement {
         let previousCount = observerItems.count
         observerItems.removeValue(forKey: token)
         motionManager.deviceMotionUpdateInterval = resolvedUpdateInterval()
-        if observerItems.count > 0 && previousCount == 0 {
+        if observerItems.isEmpty && previousCount > 0 {
             motionManager.stopDeviceMotionUpdates()
         }
     }

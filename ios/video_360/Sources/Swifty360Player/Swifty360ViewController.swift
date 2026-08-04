@@ -220,7 +220,11 @@ open class Swifty360ViewController: UIViewController, Swifty360CameraControllerD
     }
 
     deinit {
-        sceneView.delegate = nil
+        cameraController?.stopMotionUpdates()
+        cameraController?.compassAngleUpdateBlock = nil
+        cameraController?.delegate = nil
+        sceneView?.isPlaying = false
+        sceneView?.delegate = nil
     }
 
 }
@@ -228,8 +232,8 @@ open class Swifty360ViewController: UIViewController, Swifty360CameraControllerD
 extension Swifty360ViewController: SCNSceneRendererDelegate {
 
     public func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-        DispatchQueue.main.async {
-            self.cameraController.updateCameraAngleForCurrentDeviceMotion()
+        DispatchQueue.main.async { [weak self] in
+            self?.cameraController?.updateCameraAngleForCurrentDeviceMotion()
         }
     }
 

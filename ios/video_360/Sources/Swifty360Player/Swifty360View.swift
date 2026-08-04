@@ -148,11 +148,24 @@ open class Swifty360View: UIView {
 
     override open func didMoveToWindow() {
         super.didMoveToWindow()
-        cameraController.startMotionUpdates()
+        if window == nil {
+            cameraController?.stopMotionUpdates()
+        } else {
+            cameraController?.startMotionUpdates()
+        }
     }
 
     open func stopMotionUpdates() {
-        cameraController.stopMotionUpdates()
+        cameraController?.stopMotionUpdates()
+    }
+
+    open func tearDown() {
+        stopMotionUpdates()
+        sceneView?.isPlaying = false
+        sceneView?.delegate = nil
+        cameraController?.compassAngleUpdateBlock = nil
+        cameraController?.delegate = nil
+        playerScene?.pause()
     }
 
     open func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -185,7 +198,7 @@ open class Swifty360View: UIView {
     }
 
     deinit {
-        sceneView.delegate = nil
+        tearDown()
     }
 
 }
@@ -202,8 +215,8 @@ extension Swifty360View: Swifty360CameraControllerDelegate {
 extension Swifty360View: SCNSceneRendererDelegate {
 
     public func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-        DispatchQueue.main.async {
-            self.cameraController.updateCameraAngleForCurrentDeviceMotion()
+        DispatchQueue.main.async { [weak self] in
+            self?.cameraController?.updateCameraAngleForCurrentDeviceMotion()
         }
     }
 

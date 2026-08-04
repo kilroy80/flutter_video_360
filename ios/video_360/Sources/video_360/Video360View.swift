@@ -6,15 +6,15 @@ import AVKit
 import Swifty360Player
 #endif
 
-class Video360View: UIView, FlutterPlugin {
-
-    public static func register(with registrar: FlutterPluginRegistrar) {}
+class Video360View: UIView {
 
     private let channel: FlutterMethodChannel
 
     private var timer: Timer?
     private var player: AVPlayer?
-    private var swifty360View: Swifty360View!
+    private var swifty360View: Swifty360View?
+    private var playbackEndObserver: NSObjectProtocol?
+    private var isDisposed = false
     
 //    private var width: Double?
 //    private var height: Double?
@@ -43,12 +43,16 @@ extension Video360View {
     // flutter channel
     private func addChannel() {
         self.channel.setMethodCallHandler { [weak self] call, result in
-            guard let self = self else { return }
+            guard let self = self else {
+                result(FlutterError(code: "disposed", message: "Video360View was disposed", details: nil))
+                return
+            }
 
             switch call.method {
             case "init":
                 guard let argMaps = call.arguments as? Dictionary<String, Any>,
                       let url = argMaps["url"] as? String,
+                      !url.isEmpty,
                       let videoURL = URL(string: url),
                       let isRepeat = argMaps["isRepeat"] as? Bool,
                       let width = argMaps["width"] as? Double,
@@ -64,25 +68,33 @@ extension Video360View {
 //                     self.checkPlayerState()
 //                 }
 
-                 if isRepeat {
-                     NotificationCenter.default.addObserver(self,
-                                                            selector: #selector(self.playerFinish(noti:)),
-                                                            name: .AVPlayerItemDidPlayToEndTime,
-                                                            object: nil)
-                 }
+                if isRepeat, let currentItem = self.player?.currentItem {
+                    self.playbackEndObserver = NotificationCenter.default.addObserver(
+                        forName: .AVPlayerItemDidPlayToEndTime,
+                        object: currentItem,
+                        queue: .main
+                    ) { [weak self] _ in
+                        self?.reset()
+                    }
+                }
+                result(nil)
 
             case "dispose":
+                result(nil)
                 self.dispose()
 
             case "play":
                 self.play()
                 self.checkPlayerState()
+                result(nil)
                
             case "stop":
                 self.stop()
+                result(nil)
 
             case "reset":
                 self.reset()
+                result(nil)
 
             case "jumpTo":
                 guard let argMaps = call.arguments as? Dictionary<String, Any>,
@@ -91,6 +103,7 @@ extension Video360View {
                     return
                 }
                 self.jumpTo(second: time / 1000.0)
+                result(nil)
 
             case "seekTo":
                 guard let argMaps = call.arguments as? Dictionary<String, Any>,
@@ -99,27 +112,32 @@ extension Video360View {
                     return
                 }
                 self.seekTo(second: time / 1000.0)
+                result(nil)
 
             case "onPanUpdate":
                 guard let argMaps = call.arguments as? Dictionary<String, Any>,
                       let isStart = argMaps["isStart"] as? Bool,
+                      let swifty360View = self.swifty360View,
                       let x = argMaps["x"] as? Double,
-                      (0 ... Double(self.swifty360View.frame.maxX)) ~= x,
+                      (0 ... Double(swifty360View.frame.maxX)) ~= x,
                       let y = argMaps["y"] as? Double,
-                      (0 ... Double(self.swifty360View.frame.maxY)) ~= y else {
+                      (0 ... Double(swifty360View.frame.maxY)) ~= y else {
                     result(FlutterError(code: call.method, message: "Missing argument", details: nil))
                     return
                 }
                 let point = CGPoint(x: x, y: y)
-                self.swifty360View.cameraController.handlePan(isStart: isStart, point: point)
+                swifty360View.cameraController.handlePan(isStart: isStart, point: point)
+                result(nil)
 
             case "currentPosition":
                 let position = self.player?.currentItem?.currentTime() ?? .zero
-                result(Int(CMTimeGetSeconds(position) * 1000))
+                let seconds = CMTimeGetSeconds(position)
+                result(seconds.isFinite ? Int(seconds * 1000) : 0)
             
             case "duration":
                 let duration = self.player?.currentItem?.asset.duration ?? .zero
-                result(Int(CMTimeGetSeconds(duration) * 1000))
+                let seconds = CMTimeGetSeconds(duration)
+                result(seconds.isFinite ? Int(seconds * 1000) : 0)
                 
             case "playing":
                 let isPlaying = self.player?.isPlaying
@@ -133,26 +151,40 @@ extension Video360View {
 
     // 360View Init
     private func initView(videoURL: URL, width: Double, height: Double) {
+        self.cleanUpPlayback()
         self.player = AVPlayer(url: videoURL)
         let motionManager = Swifty360MotionManager.shared
         self.swifty360View = Swifty360View(
             withFrame: CGRect(x: 0.0, y: 0.0, width: width, height: height),
             player: self.player!,
             motionManager: motionManager)
-        self.swifty360View.setup(player: self.player!, motionManager: motionManager)
-        self.addSubview(self.swifty360View)
-    }
-
-    // repeat
-    @objc private func playerFinish(noti: NSNotification) {
-        self.reset()
+        self.swifty360View?.setup(player: self.player!, motionManager: motionManager)
+        if let swifty360View = self.swifty360View {
+            self.addSubview(swifty360View)
+        }
     }
 
     //dispose
     func dispose() {
-        // auto repeat notification remove
-        NotificationCenter.default.removeObserver(self)
+        guard !self.isDisposed else { return }
+        self.isDisposed = true
+        self.channel.setMethodCallHandler(nil)
+        self.cleanUpPlayback()
+    }
+
+    private func cleanUpPlayback() {
+        self.timer?.invalidate()
+        self.timer = nil
+
+        if let playbackEndObserver = self.playbackEndObserver {
+            NotificationCenter.default.removeObserver(playbackEndObserver)
+            self.playbackEndObserver = nil
+        }
+
         self.player?.pause()
+        self.swifty360View?.tearDown()
+        self.swifty360View?.removeFromSuperview()
+        self.swifty360View = nil
         self.player = nil
     }
 
@@ -163,6 +195,7 @@ extension Video360View {
 
     // stop
     private func stop() {
+        self.stopReadyTimer()
         self.player?.pause()
     }
 
@@ -180,7 +213,7 @@ extension Video360View {
 
     // seekTo
     private func seekTo(second: Double) {
-        let current = self.swifty360View.player.currentTime()
+        guard let current = self.swifty360View?.player.currentTime() else { return }
         let sec = CMTimeMakeWithSeconds(Float64(second), preferredTimescale: Int32(NSEC_PER_SEC))
         self.player?.seek(to: current + sec)
         self.checkPlayerState()
@@ -205,25 +238,44 @@ extension Video360View {
     private func checkPlayerState() {
         guard self.timer == nil else { return }
 
-        self.timer = Timer(timeInterval: 0.5,
-                           target: self,
-                           selector: #selector(self.checkReadyToPlay),
-                           userInfo: nil,
-                           repeats: true)
-        RunLoop.main.add(self.timer!, forMode: .common)
+        let timer = Timer(timeInterval: 0.5, repeats: true) { [weak self] _ in
+            self?.checkReadyToPlay()
+        }
+        self.timer = timer
+        RunLoop.main.add(timer, forMode: .common)
     }
 
     @objc private func checkReadyToPlay() {
-        guard self.player != nil,
-              let currentItem = self.player?.currentItem,
-              currentItem.status == AVPlayerItem.Status.readyToPlay,
-              currentItem.isPlaybackLikelyToKeepUp,
-              !self.player!.isPlaying else { return }
+        guard let player = self.player, let currentItem = player.currentItem else {
+            self.stopReadyTimer()
+            return
+        }
+
+        if player.isPlaying {
+            self.stopReadyTimer()
+            return
+        }
+
+        if currentItem.status == .failed {
+            self.stopReadyTimer()
+            return
+        }
+
+        guard currentItem.status == .readyToPlay,
+              currentItem.isPlaybackLikelyToKeepUp else { return }
 
         self.play()
+        self.stopReadyTimer()
+    }
 
+    private func stopReadyTimer() {
         self.timer?.invalidate()
         self.timer = nil
+    }
+
+    deinit {
+        self.channel.setMethodCallHandler(nil)
+        self.cleanUpPlayback()
     }
 }
 
