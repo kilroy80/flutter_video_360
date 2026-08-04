@@ -35,6 +35,11 @@ class Video360View: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    deinit {
+        self.channel.setMethodCallHandler(nil)
+        self.cleanUpPlayback()
+    }
 }
 
 // MARK: - Interface
@@ -273,10 +278,6 @@ extension Video360View {
         self.timer = nil
     }
 
-    deinit {
-        self.channel.setMethodCallHandler(nil)
-        self.cleanUpPlayback()
-    }
 }
 
 // MARK: - AVPlayer Extension
