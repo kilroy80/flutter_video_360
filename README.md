@@ -13,7 +13,7 @@ The minimum-supported Flutter version has been updated to 3.24. If you are using
 
 The Android uses the open source [AndroidX Media3](https://github.com/androidx/media)
 
-> AndroidX Media3 : 1.1.1 (via Google ExoPlayer Version: 2.19.1)
+> AndroidX Media3 : 1.10.1
 
 The iOS uses the open source [Swifty360Player](https://github.com/abdullahselek/Swifty360Player)
 
@@ -30,7 +30,7 @@ Add pubspec.yaml dependencies.
 
 ```dart
 dependencies:
-  video_360: ^0.0.11
+  video_360: ^1.0.0
 ```
 
 Android Requirements

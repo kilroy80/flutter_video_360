@@ -59,6 +59,7 @@ class VRActivity : Activity(), Player.Listener {
         if (Build.VERSION.SDK_INT > 23) {
             initializePlayer()
         }
+        vrPlayer.onResume()
     }
 
     override fun onResume() {
@@ -66,11 +67,13 @@ class VRActivity : Activity(), Player.Listener {
         if ((Build.VERSION.SDK_INT <= 23 || player == null)) {
             initializePlayer()
         }
+        vrPlayer.onResume()
     }
 
     override fun onPause() {
         super.onPause()
         if (Build.VERSION.SDK_INT <= 23) {
+            vrPlayer.onPause()
             releasePlayer()
         }
     }
@@ -78,6 +81,7 @@ class VRActivity : Activity(), Player.Listener {
     override fun onStop() {
         super.onStop()
         if (Build.VERSION.SDK_INT > 23) {
+            vrPlayer.onPause()
             releasePlayer()
         }
     }
@@ -117,9 +121,9 @@ class VRActivity : Activity(), Player.Listener {
     }
 
     private fun initializePlayer() {
+        releasePlayer()
         player = ExoPlayer.Builder(this).build()
 
-        val uri = Uri.parse(videoUrl)
         val mediaSource = buildMediaSource(videoUrl, buildDataSourceFactory(this, ""))
 
         mediaSource?.let {
@@ -133,11 +137,15 @@ class VRActivity : Activity(), Player.Listener {
     }
 
     private fun releasePlayer() {
-        player?.release()
+        val playerToRelease = player
         player = null
+        vrPlayer.player = null
+        if (playerToRelease == null) return
+        playerToRelease.removeListener(this)
+        playerToRelease.release()
     }
 
-    override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+    override fun onPlaybackStateChanged(playbackState: Int) {
         when (playbackState) {
             Player.STATE_BUFFERING -> {
             }
@@ -148,6 +156,12 @@ class VRActivity : Activity(), Player.Listener {
             Player.STATE_ENDED -> {
             }
         }
+    }
+
+    override fun onDestroy() {
+        vrPlayer.onPause()
+        releasePlayer()
+        super.onDestroy()
     }
 
     companion object {

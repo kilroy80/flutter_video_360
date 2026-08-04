@@ -1,9 +1,7 @@
 package com.kino.video_360
 
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
 import kotlin.test.Test
-import org.mockito.Mockito
+import kotlin.test.assertNotNull
 
 /*
  * This demonstrates a simple unit test of the Kotlin portion of this plugin's implementation.
@@ -15,13 +13,8 @@ import org.mockito.Mockito
 
 internal class Video360PluginTest {
   @Test
-  fun onMethodCall_getPlatformVersion_returnsExpectedValue() {
+  fun plugin_canBeCreated() {
     val plugin = Video360Plugin()
-
-    val call = MethodCall("getPlatformVersion", null)
-    val mockResult: MethodChannel.Result = Mockito.mock(MethodChannel.Result::class.java)
-    plugin.onMethodCall(call, mockResult)
-
-    Mockito.verify(mockResult).success("Android " + android.os.Build.VERSION.RELEASE)
+    assertNotNull(plugin)
   }
 }

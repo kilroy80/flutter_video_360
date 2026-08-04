@@ -33,7 +33,7 @@ class Video360View extends StatefulWidget {
 class _Video360ViewState extends State<Video360View>
     with WidgetsBindingObserver {
   final String viewName = 'kino_video_360';
-  late Video360Controller controller;
+  Video360Controller? controller;
 
   @override
   void initState() {
@@ -44,6 +44,8 @@ class _Video360ViewState extends State<Video360View>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    controller?.dispose();
+    controller = null;
     super.dispose();
   }
 
@@ -58,11 +60,11 @@ class _Video360ViewState extends State<Video360View>
           onPlatformViewCreated: _onPlatformViewCreated,
         ),
         onPanStart: (details) {
-          controller.onPanUpdate(
+          controller?.onPanUpdate(
               true, details.localPosition.dx, details.localPosition.dy);
         },
         onPanUpdate: (details) {
-          controller.onPanUpdate(
+          controller?.onPanUpdate(
               false, details.localPosition.dx, details.localPosition.dy);
         },
       );
@@ -80,7 +82,7 @@ class _Video360ViewState extends State<Video360View>
     var width = box?.size.width ?? 0.0;
     var height = box?.size.height ?? 0.0;
 
-    controller = Video360Controller(
+    final createdController = Video360Controller(
       id: id,
       url: widget.url,
       width: width,
@@ -89,7 +91,8 @@ class _Video360ViewState extends State<Video360View>
       onPlayInfo: widget.onPlayInfo,
     );
 
-    widget.onVideo360ViewCreated(controller);
+    controller = createdController;
+    widget.onVideo360ViewCreated(createdController);
   }
 
   Widget _createAndroidView() {

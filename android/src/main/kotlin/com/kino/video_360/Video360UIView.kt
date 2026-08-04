@@ -25,7 +25,6 @@ import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter
 import androidx.media3.exoplayer.video.spherical.SphericalGLSurfaceView
 import androidx.media3.ui.PlayerView
-import io.flutter.view.TextureRegistry
 
 class Video360UIView : FrameLayout, Player.Listener {
 
@@ -39,10 +38,7 @@ class Video360UIView : FrameLayout, Player.Listener {
 
     private lateinit var bandwidthMeter: DefaultBandwidthMeter
 
-    private var textureRegistry: TextureRegistry? = null
-
-    constructor(context: Context, textureRegistry: TextureRegistry) : super(context) {
-        this.textureRegistry = textureRegistry
+    constructor(context: Context) : super(context) {
         init()
     }
 
@@ -116,6 +112,8 @@ class Video360UIView : FrameLayout, Player.Listener {
     }
 
     fun initializePlayer(url: String, autoPlay: Boolean, repeat: Boolean) {
+        releasePlayer()
+
         player = ExoPlayer.Builder(context).build()
 
         videoUrl = url
@@ -141,24 +139,13 @@ class Video360UIView : FrameLayout, Player.Listener {
     }
 
     fun releasePlayer() {
-        if (player != null) {
-            player?.release()
-            player = null
-        }
+        val playerToRelease = player
+        player = null
+        vrPlayer.player = null
+        if (playerToRelease == null) return
+        playerToRelease.removeListener(this)
+        playerToRelease.release()
     }
-
-//    override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-//        when (playbackState) {
-//            Player.STATE_BUFFERING -> {
-//            }
-//            Player.STATE_IDLE -> {
-//            }
-//            Player.STATE_READY -> {
-//            }
-//            Player.STATE_ENDED -> {
-//            }
-//        }
-//    }
 
     fun onStart() {
         if (Build.VERSION.SDK_INT > 23) {
@@ -187,6 +174,12 @@ class Video360UIView : FrameLayout, Player.Listener {
     }
 
     fun onDestroy() {
+        dispose()
+    }
+
+    fun dispose() {
+        vrPlayer.onPause()
+        releasePlayer()
     }
 
     fun play() {
@@ -210,7 +203,6 @@ class Video360UIView : FrameLayout, Player.Listener {
     }
 
     fun reset() {
-        releasePlayer()
         initializePlayer(videoUrl, isAutoPlay, isRepeat)
     }
 

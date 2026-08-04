@@ -42,7 +42,7 @@ class _MyAppState extends State<MyApp> {
               height: MediaQuery.of(context).size.height,
               child: Video360View(
                 url:
-                    'https://cdn.bitmovin.com/content/assets/playhouse-vr/m3u8s/105560.m3u8',
+                    'https://naver.github.io/egjs-view360/pano/equirect/m3u8/equi.m3u8',
                 onVideo360ViewCreated: _onVideo360ViewCreated,
                 onPlayInfo: (Video360PlayInfo info) {
                   setState(() {
