@@ -74,7 +74,7 @@ Video360Controller Method
 sample code:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:video_360/video_360.dart';
 
 void main() {
