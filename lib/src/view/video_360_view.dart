@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:video_360/src/video_360_controller.dart';
 import 'package:video_360/src/view/video_360_android_view.dart';
 import 'package:video_360/src/view/video_360_ios_view.dart';
